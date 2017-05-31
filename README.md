@@ -1,0 +1,1 @@
+Several Dropout implementation in C++ language. Eigen library has been used as a matrix library.
