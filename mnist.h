@@ -19,7 +19,7 @@ static int reverseInt(int i)
 	return((int)ch1 << 24) + ((int)ch2 << 16) + ((int)ch3 << 8) + ch4;
 }
 
-static Eigen::MatrixXf readMnistInput(const std::string& path,
+Eigen::MatrixXf readMnistInput(const std::string& path,
 	int number_of_items = 60000)
 {
 	std::ifstream file(path, std::ios::binary);
@@ -54,7 +54,7 @@ static Eigen::MatrixXf readMnistInput(const std::string& path,
 	return result;
 }
 
-static Eigen::MatrixXf readMnistOutput(const std::string& path,
+Eigen::MatrixXf readMnistOutput(const std::string& path,
 	int number_of_items = 60000)
 {
 	float one_hot_map[10][10] = {
@@ -97,42 +97,27 @@ static Eigen::MatrixXf readMnistOutput(const std::string& path,
 	return result;
 }
 
-static void runMnist(int trial,
-					 int dataset_size,
-					 int validation_size,
-					 std::ofstream& out_file) {
-
-	bool skip_validation = false;
-	int total_size = dataset_size + validation_size;
-	if (total_size >= 60000) {
-		total_size = 60000;
-		skip_validation = true;
-	}
-	Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
-	Eigen::MatrixXf output = readMnistOutput("mnist/train-labels.idx1-ubyte", total_size);
-
-	Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
-	Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
-
-	Eigen::MatrixXf validation_input =
-		input.block(dataset_size, 0, validation_size, input.cols());
-	Eigen::MatrixXf validation_output =
-		output.block(dataset_size, 0, validation_size, output.cols());
-
-	Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
-	Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
+void runMnistNetwork(int trial,
+                     int dataset_size,
+                     Eigen::MatrixXf& train_input,
+                     Eigen::MatrixXf& train_output,
+                     Eigen::MatrixXf& validation_input,
+                     Eigen::MatrixXf& validation_output,
+                     Eigen::MatrixXf& test_input,
+                     Eigen::MatrixXf& test_output,
+                     std::ofstream& out_file) {
 
 	const int dim1 = 784;
-	const int dim2 = 300;
-	const int dim3 = 200;
+	const int dim2 = 200;
+	const int dim3 = 100;
 	const int dim4 = 10;
 
 	NetworkConfig config;
-	config.epoch_count = 200;
+	config.epoch_count = 1000;
 	config.report_each = 4;
-	config.batch_size = 50;
+	config.batch_size = 10;
 	config.momentum = 0.9f;
-	config.learning_rate = 0.001f;
+	config.learning_rate = 0.002f;
 
 	config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
 	config.addLayerConfig(dim2, dim3, Activation::ReLU, true);
@@ -148,18 +133,18 @@ static void runMnist(int trial,
 	Scenario s7 = createConcaveDropoutScenario(0.55f, 0.95f, config.epoch_count);
 	Scenario s8 = createConvexDropoutScenario(0.55f, 0.95f, config.epoch_count);
 
-	std::vector<Scenario> scenarios = {s4, s7};
-	//std::vector<Scenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8};
+	/* std::vector<Scenario> scenarios = {s4, s7}; */
+	std::vector<Scenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8};
 
 	for (Scenario& scenario : scenarios) {
 		std::cout << "Running: " << scenario.name << std::endl;
-		srand(trial + 15);
+		srand(trial + 25);
 
 		Network network(scenario, config);
 		ScenarioResult scenario_result = network.trainNetwork(
-			skip_validation ? input : train_input, skip_validation ? output : train_output,
+			train_input, train_output,
 			validation_input, validation_output,
-			skip_validation);
+			false);
 
 		int correct = network.test(test_input, test_output);
 		scenario_result.count = 10000;
@@ -189,22 +174,42 @@ static void runMnist(int trial,
 	}
 }
 
-static void runMnist() {
+void runMnist() {
 	std::ofstream out_file;
 	out_file.open("mnist.txt");
 
+    int total_size = 60000;
+    int validation_size = 100;
+    int validation_begin = total_size - validation_size;
+
+	Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
+	Eigen::MatrixXf output = readMnistOutput("mnist/train-labels.idx1-ubyte", total_size);
+
+	Eigen::MatrixXf validation_input =
+		input.block(validation_begin, 0, validation_size, input.cols());
+	Eigen::MatrixXf validation_output =
+		output.block(validation_begin, 0, validation_size, output.cols());
+
+	Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
+	Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
+
+    int dataset_sizes[] = {500, 1000, 2000, 5000};
 	for (int trial = 0; trial < 1; trial++) {
-		/* runMnist(200, trial); */
-		runMnist(trial, 500, 50, out_file);
-		runMnist(trial, 1000, 100, out_file);
-		runMnist(trial, 2000, 200, out_file);
-		//runMnist(trial, 3000, 300, out_file);
-		//runMnist(trial, 5000, 500, out_file);
-		//runMnist(trial, 10000, 1000, out_file);
-		/* runMnist(trial, 30000, 3000, out_file); */
-		/* runMnist(trial, 55000, 5000, out_file); */
-		//runMnist(trial, 60000, 0, out_file);
-		/* runMnist(60000, trial); */
+        for (auto &dataset_size : dataset_sizes) {
+
+            Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
+            Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
+
+            runMnistNetwork(trial,
+                            dataset_size,
+                            train_input,
+                            train_output,
+                            validation_input,
+                            validation_output,
+                            test_input,
+                            test_output,
+                            out_file);
+        }
 	}
 	out_file.close();
 }

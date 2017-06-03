@@ -226,8 +226,8 @@ def plotOverfit(dataset):
     # axes = plt.gca()
     # axes.set_xlim([0, 10000])
 
-    plt.xticks([0, 500, 1000, 2000, 3000, 5000, 10000])
-    plt.yticks([v/100.0 for v in range(120) if v % 4 == 0])
+    # plt.xticks([0, 500, 1000, 2000, 3000, 5000, 10000])
+    # plt.yticks([v/100.0 for v in range(120) if v % 4 == 0])
 
     first_time = True
     for size in dataset:

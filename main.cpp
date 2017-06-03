@@ -8,7 +8,6 @@
 #include "xor.h"
 #include "iris.h"
 #include "mnist.h"
-#include "cifar.h"
 
 void selectTest() {
 	Eigen::MatrixXf mat = Eigen::MatrixXf::Random(5, 4);
