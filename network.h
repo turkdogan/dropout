@@ -7,63 +7,80 @@
 #include <random>
 
 #include "layer.h"
+#include "dropout_layer.h"
 #include "scenario.h"
 
 struct NetworkConfig {
-	int epoch_count = 1;
 	float learning_rate = 0.001f;
 	float momentum = 0.9f;
-	int batch_size = 1;
-	int report_each = 1;
+
+	unsigned int epoch_count = 1;
+	unsigned int batch_size = 1;
+	unsigned int report_each = 1;
+
+	void addLayerConfig(const int dim1,
+						const int dim2,
+						Activation activation,
+						bool is_dropout = false) {
+		LayerConfig layer_config;
+		layer_config.rows = dim1;
+		layer_config.cols = dim2;
+		layer_config.activation = activation;
+		layer_config.is_dropout = is_dropout;
+		layer_configs.push_back(layer_config);
+	}
+
+	std::vector<LayerConfig> layer_configs;
 };
 
 class Network {
 
 public:
-    Network(
-        Scenario& scenario,
-        NetworkConfig& config,
-        LayerConfig& layer_config1,
-        LayerConfig& layer_config2,
-        LayerConfig& layer_config3);
+	Network(
+		Scenario& scenario,
+		NetworkConfig& config);
 
-    ~Network();
+	~Network();
 
-    ScenarioResult trainNetwork(
-        Eigen::MatrixXf& input,
-        Eigen::MatrixXf& expected,
-        Eigen::MatrixXf& v_input,
-        Eigen::MatrixXf& v_expected);
+	ScenarioResult trainNetwork(
+		Eigen::MatrixXf& input,
+		Eigen::MatrixXf& expected,
+		Eigen::MatrixXf& v_input,
+		Eigen::MatrixXf& v_expected,
+		bool skip_validate=true);
 
 
-    int test(
-        Eigen::MatrixXf& input,
-        Eigen::MatrixXf& output);
+	int test(
+		Eigen::MatrixXf& input,
+		Eigen::MatrixXf& output);
 
 private:
-    void feedforward(
-        Eigen::MatrixXf & input,
-        bool testing = false);
+	void feedforward(
+		Eigen::MatrixXf & input,
+		bool testing = false);
 
-    float iterate(
-        Eigen::MatrixXf& input,
-        Eigen::MatrixXf& output);
+	float iterate(
+		Eigen::MatrixXf& input,
+		Eigen::MatrixXf& output);
 
-    float validate(
-        Eigen::MatrixXf& input,
-        Eigen::MatrixXf& output);
+	float validate(
+		Eigen::MatrixXf& input,
+		Eigen::MatrixXf& output);
 
-    void Network::backpropagate(
-        Eigen::MatrixXf& error);
+	void Network::backpropagate(
+		Eigen::MatrixXf& error);
 
-    void Network::update();
+	void Network::update();
 
-    Layer l1;
-    Layer l2;
-    Layer l3;
+	/* Layer* l1; */
+	/* Layer* l2; */
+	/* Layer* l3; */
 
-    Scenario m_scenario;
-    NetworkConfig m_config;
+	Layer **layers;
+	int m_layer_count;
+
+	Scenario m_scenario;
+	NetworkConfig m_config;
 
 };
 

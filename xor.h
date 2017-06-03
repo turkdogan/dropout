@@ -29,24 +29,13 @@ void runXorLayers() {
     config.batch_size = 1;
     config.report_each = 1000;
 
+    config.addLayerConfig(2, 15, Activation::Sigmoid);
+    config.addLayerConfig(15, 5, Activation::Sigmoid);
+    config.addLayerConfig(5, 1, Activation::Sigmoid);
+
     Scenario scenario = createNoDropoutScenario();
 
-    LayerConfig layer_config1;
-    layer_config1.rows = 2;
-    layer_config1.cols = 15;
-    layer_config1.activation = Activation::Sigmoid;
-
-    LayerConfig layer_config2;
-    layer_config2.rows = 15;
-    layer_config2.cols = 5;
-    layer_config2.activation = Activation::Sigmoid;
-
-    LayerConfig layer_config3;
-    layer_config3.rows = 5;
-    layer_config3.cols = 1;
-    layer_config3.activation = Activation::Sigmoid;
-
-    Network network(scenario, config, layer_config1, layer_config2, layer_config3);
+    Network network(scenario, config);
     ScenarioResult scenario_result = network.trainNetwork(
         input, output,
         input, output);

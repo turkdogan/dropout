@@ -97,14 +97,19 @@ static Eigen::MatrixXf readMnistOutput(const std::string& path,
 	return result;
 }
 
-static void runMnist(int trial, int dataset_size, int validation_size, std::ofstream& out_file) {
-	Eigen::MatrixXf input = readMnistInput(
-		"mnist/train-images.idx3-ubyte",
-		dataset_size + validation_size);
+static void runMnist(int trial,
+					 int dataset_size,
+					 int validation_size,
+					 std::ofstream& out_file) {
 
-	Eigen::MatrixXf output = readMnistOutput(
-		"mnist/train-labels.idx1-ubyte",
-		dataset_size + validation_size);
+	bool skip_validation = false;
+	int total_size = dataset_size + validation_size;
+	if (total_size >= 60000) {
+		total_size = 60000;
+		skip_validation = true;
+	}
+	Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
+	Eigen::MatrixXf output = readMnistOutput("mnist/train-labels.idx1-ubyte", total_size);
 
 	Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
 	Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
@@ -114,16 +119,12 @@ static void runMnist(int trial, int dataset_size, int validation_size, std::ofst
 	Eigen::MatrixXf validation_output =
 		output.block(dataset_size, 0, validation_size, output.cols());
 
-	Eigen::MatrixXf test_input = readMnistInput(
-		"mnist/t10k-images.idx3-ubyte",
-		10000);
-	Eigen::MatrixXf test_output = readMnistOutput(
-		"mnist/t10k-labels.idx1-ubyte",
-		10000);
+	Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
+	Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
 	const int dim1 = 784;
 	const int dim2 = 300;
-	const int dim3 = 20;
+	const int dim3 = 200;
 	const int dim4 = 10;
 
 	NetworkConfig config;
@@ -132,6 +133,11 @@ static void runMnist(int trial, int dataset_size, int validation_size, std::ofst
 	config.batch_size = 50;
 	config.momentum = 0.9f;
 	config.learning_rate = 0.001f;
+
+	config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
+	config.addLayerConfig(dim2, dim3, Activation::ReLU, true);
+	/* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
+	config.addLayerConfig(dim3, dim4, Activation::Softmax, false);
 
 	Scenario s1 = createNoDropoutScenario();
 	Scenario s2 = createConstantDropoutScenario(0.5f, config.epoch_count);
@@ -142,33 +148,18 @@ static void runMnist(int trial, int dataset_size, int validation_size, std::ofst
 	Scenario s7 = createConcaveDropoutScenario(0.55f, 0.95f, config.epoch_count);
 	Scenario s8 = createConvexDropoutScenario(0.55f, 0.95f, config.epoch_count);
 
-	/* std::vector<Scenario> scenarios = {s7}; */
-	std::vector<Scenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8};
+	std::vector<Scenario> scenarios = {s4, s7};
+	//std::vector<Scenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8};
 
 	for (Scenario& scenario : scenarios) {
-
-        LayerConfig layer_config1;
-        layer_config1.rows = dim1;
-        layer_config1.cols = dim2;
-        layer_config1.activation = Activation::Sigmoid;
-
-        LayerConfig layer_config2;
-        layer_config2.rows = dim2;
-        layer_config2.cols = dim3;
-        layer_config2.activation = Activation::Sigmoid;
-
-        LayerConfig layer_config3;
-        layer_config3.rows = dim3;
-        layer_config3.cols = dim4;
-        layer_config3.activation = Activation::Softmax;
-
 		std::cout << "Running: " << scenario.name << std::endl;
 		srand(trial + 15);
 
-        Network network(scenario, config, layer_config1, layer_config2, layer_config3);
+		Network network(scenario, config);
 		ScenarioResult scenario_result = network.trainNetwork(
-			train_input, train_output,
-			validation_input, validation_output);
+			skip_validation ? input : train_input, skip_validation ? output : train_output,
+			validation_input, validation_output,
+			skip_validation);
 
 		int correct = network.test(test_input, test_output);
 		scenario_result.count = 10000;
@@ -199,17 +190,20 @@ static void runMnist(int trial, int dataset_size, int validation_size, std::ofst
 }
 
 static void runMnist() {
-    std::ofstream out_file;
-    out_file.open("mnist.txt");
+	std::ofstream out_file;
+	out_file.open("mnist.txt");
 
 	for (int trial = 0; trial < 1; trial++) {
 		/* runMnist(200, trial); */
-		/* runMnist(trial, 500, 50, out_file); */
+		runMnist(trial, 500, 50, out_file);
 		runMnist(trial, 1000, 100, out_file);
-		/* runMnist(trial, 6000, 600, out_file); */
-		/* runMnist(trial, 10000, 1000, out_file); */
+		runMnist(trial, 2000, 200, out_file);
+		//runMnist(trial, 3000, 300, out_file);
+		//runMnist(trial, 5000, 500, out_file);
+		//runMnist(trial, 10000, 1000, out_file);
 		/* runMnist(trial, 30000, 3000, out_file); */
 		/* runMnist(trial, 55000, 5000, out_file); */
+		//runMnist(trial, 60000, 0, out_file);
 		/* runMnist(60000, trial); */
 	}
 	out_file.close();

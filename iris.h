@@ -87,8 +87,6 @@ static Dataset readIris() {
 }
 
 static void runIris() {
-	Dataset dataset = readIris();
-
 
 	NetworkConfig config;
 	config.epoch_count = 3000;
@@ -96,24 +94,16 @@ static void runIris() {
 	config.momentum = 0.5f;
 	config.batch_size = 30;
 	config.report_each = 100;
+
+    config.addLayerConfig(4, 150, Activation::Sigmoid, true);
+    config.addLayerConfig(150, 40, Activation::Sigmoid, true);
+    config.addLayerConfig(40, 3, Activation::Softmax, false);
+
 	Scenario scenario = createConstantDropoutScenario(0.8f, config.epoch_count);
 
-    LayerConfig layer_config1;
-    layer_config1.rows = 4;
-    layer_config1.cols = 150;
-    layer_config1.activation = Activation::Sigmoid;
+    Network network(scenario, config);
 
-    LayerConfig layer_config2;
-    layer_config2.rows = 150;
-    layer_config2.cols = 40;
-    layer_config2.activation = Activation::Sigmoid;
-
-    LayerConfig layer_config3;
-    layer_config3.rows = 40;
-    layer_config3.cols = 3;
-    layer_config3.activation = Activation::Softmax;
-
-    Network network(scenario, config, layer_config1, layer_config2, layer_config3);
+	Dataset dataset = readIris();
 	ScenarioResult scenario_result = network.trainNetwork(
 		dataset.input, dataset.output,
 		dataset.input, dataset.output);

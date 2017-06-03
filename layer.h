@@ -1,52 +1,68 @@
 #ifndef LAYER_H
 #define LAYER_H
 
+#include "Eigen/Dense"
+
 #include "utils.h"
 #include "scenario.h"
+
+enum Activation {
+    Sigmoid,
+    Tanh,
+    ReLU,
+    Softmax
+};
+
+struct LayerConfig {
+    int rows;
+    int cols;
+
+    Activation activation;
+
+    bool is_dropout = false;
+};
 
 class Layer {
 
 public:
-	Layer(const LayerConfig& layerConfig, Scenario& scenario) : m_scenario(scenario) {
+    Layer(const LayerConfig& layerConfig) {
 		W = xavierMatrix(layerConfig.rows, layerConfig.cols,
-						 layerConfig.activation == Activation::Sigmoid);
+                         layerConfig.activation == Activation::Sigmoid);
 
 		W_change = Eigen::MatrixXf::Zero(W.rows(), W.cols());
 		B = Eigen::VectorXf::Ones(W.cols());
-		B_change = 0.0f;
+        B_change = 0.0f;
 
-		switch (layerConfig.activation) {
-		case Activation::Sigmoid:
-			activation = sigmoid;
-			dactivation = dsigmoid;
-			break;
-		case Activation::Tanh:
-			activation = _tanh;
-			dactivation = _dtanh;
-			break;
-		case Activation::ReLU:
-			activation = relu;
-			dactivation = drelu;
-			break;
-		case Activation::Softmax:
-			activation = softmax;
-			dactivation = dsoftmax;
-			break;
-		default:
-			break;
-		};
+        switch (layerConfig.activation) {
+        case Activation::Sigmoid:
+            activation = sigmoid;
+            dactivation = dsigmoid;
+            break;
+        case Activation::Tanh:
+            activation = _tanh;
+            dactivation = _dtanh;
+            break;
+        case Activation::ReLU:
+            activation = relu;
+            dactivation = drelu;
+            break;
+        case Activation::Softmax:
+            activation = softmax;
+            dactivation = dsoftmax;
+            break;
+        default:
+            break;
+        };
 
 	}
 
-	void feedforward(bool testing = false);
+	virtual void feedforward(bool testing = false);
 
-	void backpropagate();
+	virtual void backpropagate();
 
-	void update(float momentum, float learning_rate);
+	virtual void update(float momentum, float learning_rate);
 
-	void preEpoch(const int epoch);
-
-	float averageDropuot() const;
+    virtual void preEpoch(const int epoch);
 
 public:
 	Eigen::MatrixXf X;
@@ -60,10 +76,6 @@ public:
 
 	Eigen::MatrixXf W;
 
-	virtual void print() {
-		std::cout << "Base Layer: " << W.rows() << ", " << W.cols() << std::endl;
-	}
-
 protected:
 	Eigen::MatrixXf W_change;
 
@@ -75,14 +87,6 @@ protected:
 
 	Eigen::MatrixXf(*activation)(Eigen::MatrixXf&);
 	Eigen::MatrixXf(*dactivation)(Eigen::MatrixXf&);
-
-private:
-	Scenario& m_scenario;
-	Eigen::MatrixXf dropout_mask;
-	float dropout_ratio = 1.0f;
-
-	std::vector<float> dropouts;
-
 };
 
 #endif

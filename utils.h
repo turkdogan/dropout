@@ -82,7 +82,7 @@ static void fill_xavier(Eigen::MatrixXf& mat) {
 }
 
 static Eigen::MatrixXf uniformMatrix(int rows, int cols, float low, float high) {
-    Eigen::MatrixXf result(rows, cols);
+	Eigen::MatrixXf result(rows, cols);
 
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> distribution(low, high);
@@ -92,14 +92,14 @@ static Eigen::MatrixXf uniformMatrix(int rows, int cols, float low, float high) 
 			result(r, c) = distribution(generator);
 		}
 	}
-    return result;
+	return result;
 }
 
 static Eigen::MatrixXf xavierMatrix(int rows, int cols, bool is_sigmoid = true) {
-    float scale = is_sigmoid ? 4.0f : 1.0f;
+	float scale = is_sigmoid ? 4.0f : 1.0f;
 	float high = scale * std::sqrt(6.0f / (rows + cols));
 
-    return uniformMatrix(rows, cols, -high, high);
+	return uniformMatrix(rows, cols, -high, high);
 }
 
 static Eigen::MatrixXf binomial(int rows, int cols, double ratio)
@@ -107,13 +107,13 @@ static Eigen::MatrixXf binomial(int rows, int cols, double ratio)
 	std::default_random_engine generator;
 	std::binomial_distribution<int> distribution(1, ratio);
 
-    Eigen::MatrixXf result(rows, cols);
+	Eigen::MatrixXf result(rows, cols);
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < cols; c++) {
 			result(r, c) = distribution(generator);
 		}
 	}
-    return result;
+	return result;
 }
 
 static Eigen::MatrixXf _tanh(Eigen::MatrixXf& mat)
@@ -138,13 +138,13 @@ static Eigen::MatrixXf dsigmoid(Eigen::MatrixXf& mat)
 
 static Eigen::MatrixXf relu(Eigen::MatrixXf& mat)
 {
-    return (mat.array() > 0).select(mat, 0.0);
+	return (mat.array() > 0).select(mat, 0.0);
 }
 
 static Eigen::MatrixXf drelu(Eigen::MatrixXf& mat)
 {
-    Eigen::MatrixXf zeros = Eigen::MatrixXf::Zero(mat.rows(), mat.cols());
-    return (mat.array() > 0).select(1.0f, zeros);
+	Eigen::MatrixXf zeros = Eigen::MatrixXf::Zero(mat.rows(), mat.cols());
+	return (mat.array() > 0).select(1.0f, zeros);
 }
 
 static Eigen::MatrixXf softmax(Eigen::MatrixXf& mat)
@@ -171,7 +171,7 @@ static Eigen::MatrixXf softmax(Eigen::MatrixXf& mat)
 
 static Eigen::MatrixXf clipZero(Eigen::MatrixXf& mat)
 {
-    return (mat.array() <= 0).select(0.000001, mat);
+	return (mat.array() <= 0).select(0.000001, mat);
 }
 
 static Eigen::MatrixXf dsoftmax(Eigen::MatrixXf& mat)

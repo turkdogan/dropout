@@ -8,13 +8,14 @@
 #include "xor.h"
 #include "iris.h"
 #include "mnist.h"
+#include "cifar.h"
 
 void selectTest() {
-    Eigen::MatrixXf mat = Eigen::MatrixXf::Random(5, 4);
-    std::cout << mat << std::endl;
-    // mat = (mat < 0).select(0, mat);
-    std::cout << "----" << std::endl;
-    std::cout << (mat.array() < 0).select(0, mat) << std::endl;
+	Eigen::MatrixXf mat = Eigen::MatrixXf::Random(5, 4);
+	std::cout << mat << std::endl;
+	// mat = (mat < 0).select(0, mat);
+	std::cout << "----" << std::endl;
+	std::cout << (mat.array() < 0).select(0, mat) << std::endl;
 }
 
 int main()
@@ -25,7 +26,7 @@ int main()
 	// runXorLayers();
 	runMnist();
 	// runCifar();
-    // selectTest();
+	// selectTest();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;
