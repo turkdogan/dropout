@@ -113,7 +113,7 @@ void runMnistNetwork(int trial,
 	const int dim4 = 10;
 
 	NetworkConfig config;
-	config.epoch_count = 1000;
+	config.epoch_count = 120;
 	config.report_each = 4;
 	config.batch_size = 10;
 	config.momentum = 0.9f;
@@ -193,7 +193,7 @@ void runMnist() {
 	Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
 	Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {500, 1000, 2000, 5000};
+    int dataset_sizes[] = {200, 500, 1000, 2000, 3000};
 	for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
 

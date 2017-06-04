@@ -213,8 +213,6 @@ def plot_all_weights():
     print(files)
 
 def plotOverfit(dataset):
-    fit = plt.figure();
-    # fit.set_size_inches(8, 10)
 
     plot_list = []
 
@@ -232,8 +230,16 @@ def plotOverfit(dataset):
     first_time = True
     for size in dataset:
         index=0
+        fit = plt.figure();
+        fit.set_size_inches(12, 4)
         for data in dataset[size]:
-            plott, = plt.plot([data['size']], [data['overfit']/200.0], "x", color=colors[index])
+            plott, = plt.plot([data['size']], [data['overfit']/1000.0], "x", color=colors[index])
+            plt.ylabel("Average overfit per epoch")
+            plt.xlabel("Dataset size")
+
+            # plott, = plt.plot([data['size']], [10000-data['correct']], "x", color=colors[index])
+            # plt.ylabel("Misclassified sample size of 10000")
+            # plt.xlabel("Dataset size")
             index=index+1
             if first_time:
                 scenario_name = data['name'].split("_")
@@ -248,13 +254,16 @@ def plotOverfit(dataset):
                     scenario = scenario + "-" + scenario_name[3][:-4]
                 scenarios.append(scenario)
                 # print(scenario)
+        plt.legend(scenarios)
+        plt.savefig(str(size) +"-overfit.png")
+        # plt.savefig(str(size) +"-misclassified.png")
         first_time = False
 
-    plt.ylabel("Average overfit per epoch")
-    plt.xlabel("Dataset size")
+    # plt.ylabel("Average overfit per epoch")
+    # plt.xlabel("Dataset size")
     # print([dataset[a]['name'].split("_")[2] for a in range(len(dataset))])
-    plt.legend(scenarios)
-    plt.show();
+    # plt.legend(scenarios)
+    # plt.show();
     # plt.savefig(name)
 
 def plotOverfits(file_name):

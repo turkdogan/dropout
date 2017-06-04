@@ -12,13 +12,13 @@ void Layer::backpropagate() {
 }
 
 void Layer::update(float momentum, float learning_rate) {
-    Eigen::MatrixXf w3_change = W_change * momentum + DW * learning_rate;
-    float b3_change = B_change * momentum + DZ.mean() * learning_rate;
+    Eigen::MatrixXf w_change = W_change * momentum + DW * learning_rate;
+    float b_change = B_change * momentum + DZ.mean() * learning_rate;
 
-    W -= w3_change;
-    W_change = w3_change;
-    B.array() -= b3_change;
-    B_change = b3_change;
+    W -= w_change;
+    W_change = w_change;
+    B.array() -= b_change;
+    B_change = b_change;
 }
 
 void Layer::preEpoch(const int epoch) {
