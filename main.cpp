@@ -9,6 +9,8 @@
 #include "iris.h"
 #include "mnist.h"
 
+#include "examples/mnist_dropout_experiment.h"
+
 void selectTest() {
 	Eigen::MatrixXf mat = Eigen::MatrixXf::Random(5, 4);
 	std::cout << mat << std::endl;
@@ -17,15 +19,17 @@ void selectTest() {
 	std::cout << (mat.array() < 0).select(0, mat) << std::endl;
 }
 
-int main()
-{
+int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 	// runIris();
 	// runXorLayers();
-	runMnist();
+	// runMnist();
 	// runCifar();
 	// selectTest();
+
+    MnistDropoutExperiment mnist_dropout_ex;
+    mnist_dropout_ex.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;

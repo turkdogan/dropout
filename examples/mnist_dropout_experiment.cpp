@@ -1,15 +1,54 @@
-#ifndef MNIST_H
-#define MNIST_H
-
-#include "utils.h"
-#include "network.h"
-#include "scenario.h"
-
-#include "Eigen/Dense"
+#include "mnist_dropout_experiment.h"
 
 #include <iostream>
 
-static int reverseInt(int i)
+#include "../utils.h"
+#include "../network.h"
+#include "../scenario.h"
+
+void MnistDropoutExperiment::run() {
+    std::cout << "Mnist Dropout Experiment Run..." << std::endl;
+
+	std::ofstream out_file;
+	out_file.open("mnist.txt");
+
+    int total_size = 60000;
+    int validation_size = 100;
+    int validation_begin = total_size - validation_size;
+
+	Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
+	Eigen::MatrixXf output = readMnistOutput("mnist/train-labels.idx1-ubyte", total_size);
+
+	Eigen::MatrixXf validation_input =
+		input.block(validation_begin, 0, validation_size, input.cols());
+	Eigen::MatrixXf validation_output =
+		output.block(validation_begin, 0, validation_size, output.cols());
+
+	Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
+	Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
+
+    int dataset_sizes[] = {200, 500, 1000, 2000, 3000};
+	for (int trial = 0; trial < 1; trial++) {
+        for (auto &dataset_size : dataset_sizes) {
+
+            Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
+            Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
+
+            runMnistNetwork(trial,
+                            dataset_size,
+                            train_input,
+                            train_output,
+                            validation_input,
+                            validation_output,
+                            test_input,
+                            test_output,
+                            out_file);
+        }
+	}
+	out_file.close();
+}
+
+int MnistDropoutExperiment::reverseInt(int i)
 {
 	unsigned char ch1, ch2, ch3, ch4;
 	ch1 = i & 255;
@@ -19,8 +58,8 @@ static int reverseInt(int i)
 	return((int)ch1 << 24) + ((int)ch2 << 16) + ((int)ch3 << 8) + ch4;
 }
 
-Eigen::MatrixXf readMnistInput(const std::string& path,
-	int number_of_items = 60000)
+Eigen::MatrixXf MnistDropoutExperiment::readMnistInput(const std::string& path,
+                                                       int number_of_items)
 {
 	std::ifstream file(path, std::ios::binary);
 	Eigen::MatrixXf result(number_of_items, 784);
@@ -54,8 +93,8 @@ Eigen::MatrixXf readMnistInput(const std::string& path,
 	return result;
 }
 
-Eigen::MatrixXf readMnistOutput(const std::string& path,
-	int number_of_items = 60000)
+Eigen::MatrixXf MnistDropoutExperiment::readMnistOutput(const std::string& path,
+                                                        int number_of_items)
 {
 	float one_hot_map[10][10] = {
 		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -97,7 +136,7 @@ Eigen::MatrixXf readMnistOutput(const std::string& path,
 	return result;
 }
 
-void runMnistNetwork(int trial,
+void MnistDropoutExperiment::runMnistNetwork(int trial,
                      int dataset_size,
                      Eigen::MatrixXf& train_input,
                      Eigen::MatrixXf& train_output,
@@ -174,45 +213,3 @@ void runMnistNetwork(int trial,
 		out_file << overfit << std::endl;
 	}
 }
-
-void runMnist() {
-	std::ofstream out_file;
-	out_file.open("mnist.txt");
-
-    int total_size = 60000;
-    int validation_size = 100;
-    int validation_begin = total_size - validation_size;
-
-	Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
-	Eigen::MatrixXf output = readMnistOutput("mnist/train-labels.idx1-ubyte", total_size);
-
-	Eigen::MatrixXf validation_input =
-		input.block(validation_begin, 0, validation_size, input.cols());
-	Eigen::MatrixXf validation_output =
-		output.block(validation_begin, 0, validation_size, output.cols());
-
-	Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
-	Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
-
-    int dataset_sizes[] = {200, 500, 1000, 2000, 3000};
-	for (int trial = 0; trial < 1; trial++) {
-        for (auto &dataset_size : dataset_sizes) {
-
-            Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
-            Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
-
-            runMnistNetwork(trial,
-                            dataset_size,
-                            train_input,
-                            train_output,
-                            validation_input,
-                            validation_output,
-                            test_input,
-                            test_output,
-                            out_file);
-        }
-	}
-	out_file.close();
-}
-
-#endif

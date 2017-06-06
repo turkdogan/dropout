@@ -108,6 +108,26 @@ static Scenario createConcaveDropoutScenario(
     return scenario;
 }
 
+static Scenario createConcaveDecDropoutScenario(
+    float dropout_begin = 1.0f,
+    float dropout_end = .5f,
+    int epoch_count = 0) {
+
+    Scenario scenario;
+    scenario.type = DropoutType::CONCAVE;
+    scenario.name = "CONCAVE_DEC_DROPOUT_" +
+        std::to_string(dropout_begin) +
+        "_" + std::to_string(dropout_end);
+
+    auto concave_fn = [](float x) { return sqrt(x); };
+    float concave_diff = concave_fn(static_cast<float>(epoch_count)) - concave_fn(0.0f);
+    float convace_fn_scale = concave_diff / (dropout_end - dropout_begin);
+    for (int i = 0; i < epoch_count; i++) {
+        scenario.dropouts.push_back(dropout_begin - concave_fn(static_cast<float>(i)) / convace_fn_scale);
+    }
+    return scenario;
+}
+
 static Scenario createConvexDropoutScenario(float dropout_begin = 0.5f,
                                             float dropout_end = 1.0f,
                                             int epoch_count = 0) {
