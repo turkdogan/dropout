@@ -1,4 +1,4 @@
-#include "mnist_dropout_experiment.h"
+#include "mnist_experiment.h"
 
 #include <iostream>
 
@@ -6,7 +6,7 @@
 #include "../network.h"
 #include "../scenario.h"
 
-void MnistDropoutExperiment::run() {
+void MnistExperiment::run() {
     std::cout << "Mnist Dropout Experiment Run..." << std::endl;
 
 	std::ofstream out_file;
@@ -48,7 +48,7 @@ void MnistDropoutExperiment::run() {
 	out_file.close();
 }
 
-int MnistDropoutExperiment::reverseInt(int i)
+int MnistExperiment::reverseInt(int i)
 {
 	unsigned char ch1, ch2, ch3, ch4;
 	ch1 = i & 255;
@@ -58,7 +58,7 @@ int MnistDropoutExperiment::reverseInt(int i)
 	return((int)ch1 << 24) + ((int)ch2 << 16) + ((int)ch3 << 8) + ch4;
 }
 
-Eigen::MatrixXf MnistDropoutExperiment::readMnistInput(const std::string& path,
+Eigen::MatrixXf MnistExperiment::readMnistInput(const std::string& path,
                                                        int number_of_items)
 {
 	std::ifstream file(path, std::ios::binary);
@@ -93,7 +93,7 @@ Eigen::MatrixXf MnistDropoutExperiment::readMnistInput(const std::string& path,
 	return result;
 }
 
-Eigen::MatrixXf MnistDropoutExperiment::readMnistOutput(const std::string& path,
+Eigen::MatrixXf MnistExperiment::readMnistOutput(const std::string& path,
                                                         int number_of_items)
 {
 	float one_hot_map[10][10] = {
@@ -136,7 +136,7 @@ Eigen::MatrixXf MnistDropoutExperiment::readMnistOutput(const std::string& path,
 	return result;
 }
 
-void MnistDropoutExperiment::runMnistNetwork(int trial,
+void MnistExperiment::runMnistNetwork(int trial,
                      int dataset_size,
                      Eigen::MatrixXf& train_input,
                      Eigen::MatrixXf& train_output,

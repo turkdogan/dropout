@@ -5,31 +5,15 @@
 
 #include <chrono>
 
-#include "xor.h"
-#include "iris.h"
-#include "mnist.h"
-
-#include "examples/mnist_dropout_experiment.h"
-
-void selectTest() {
-	Eigen::MatrixXf mat = Eigen::MatrixXf::Random(5, 4);
-	std::cout << mat << std::endl;
-	// mat = (mat < 0).select(0, mat);
-	std::cout << "----" << std::endl;
-	std::cout << (mat.array() < 0).select(0, mat) << std::endl;
-}
+#include "examples/mnist_experiment.h"
+#include "examples/iris_experiment.h"
 
 int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
-	// runIris();
-	// runXorLayers();
-	// runMnist();
-	// runCifar();
-	// selectTest();
 
-    MnistDropoutExperiment mnist_dropout_ex;
-    mnist_dropout_ex.run();
+    MnistExperiment mnist_experiment;
+    mnist_experiment.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;

@@ -5,7 +5,7 @@
 
 #include "../Eigen/Dense"
 
-class MnistDropoutExperiment : public Experiment {
+class MnistExperiment : public Experiment {
 
 public:
     void run() override;
