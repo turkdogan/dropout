@@ -18,7 +18,6 @@ struct LayerConfig {
     int cols;
 
     Activation activation;
-
     bool is_dropout = false;
 };
 

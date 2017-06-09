@@ -37,7 +37,7 @@ class Network {
 
 public:
 	Network(
-		Scenario& scenario,
+		DropoutScenario& scenario,
 		NetworkConfig& config);
 
 	~Network();
@@ -79,7 +79,7 @@ private:
 	Layer **layers;
 	int m_layer_count;
 
-	Scenario m_scenario;
+	DropoutScenario m_scenario;
 	NetworkConfig m_config;
 
 };

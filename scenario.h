@@ -13,26 +13,15 @@ struct ScenarioResult {
 	std::vector<Eigen::MatrixXf> weights;
 
     int dataset_size;
-
 	int count;
 	int correct;
-
     int trial;
 
     std::string scenario_name;
 };
 
-enum DropoutType {
-	NONE,
-	CONSTANT,
-	LINEAR,
-	CONVEX,
-	CONCAVE,
-	RANDOM
-};
-
-struct Scenario {
-    DropoutType type;
+struct DropoutScenario {
+    bool dont_drop = false;
 
     std::vector<float> dropouts;
 
@@ -47,18 +36,17 @@ struct Scenario {
     std::string name;
 };
 
-static Scenario createNoDropoutScenario() {
-    Scenario scenario;
-    scenario.type = DropoutType::NONE;
+static DropoutScenario createNoDropoutScenario() {
+    DropoutScenario scenario;
+    scenario.dont_drop = true;
     scenario.name = "NO_DROPOUT";
     return scenario;
 }
 
-static Scenario createConstantDropoutScenario(float dropout = 0.5f,
+static DropoutScenario createConstantDropoutScenario(float dropout = 0.5f,
                                    int epoch_count = 0) {
 
-    Scenario scenario;
-    scenario.type = DropoutType::CONSTANT;
+    DropoutScenario scenario;
     scenario.name = "CONSTANT_DROPOUT_" + std::to_string(dropout);
 
     for (int i = 0; i < epoch_count; i++) {
@@ -67,13 +55,12 @@ static Scenario createConstantDropoutScenario(float dropout = 0.5f,
     return scenario;
 }
 
-static Scenario createLinearDropoutScenario(
+static DropoutScenario createLinearDropoutScenario(
     float dropout_begin = 0.5f,
     float dropout_end = 1.0f,
     int epoch_count = 0) {
 
-    Scenario scenario;
-    scenario.type = DropoutType::LINEAR;
+    DropoutScenario scenario;
     scenario.name = "LINEAR_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
@@ -87,13 +74,12 @@ static Scenario createLinearDropoutScenario(
     return scenario;
 }
 
-static Scenario createConcaveDropoutScenario(
+static DropoutScenario createConcaveDropoutScenario(
                                  float dropout_begin = 0.5f,
                                  float dropout_end = 1.0f,
                                  int epoch_count = 0) {
 
-    Scenario scenario;
-    scenario.type = DropoutType::CONCAVE;
+    DropoutScenario scenario;
     scenario.name = "CONCAVE_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
@@ -108,14 +94,32 @@ static Scenario createConcaveDropoutScenario(
     return scenario;
 }
 
-static Scenario createConcaveDecDropoutScenario(
+static DropoutScenario createConcaveDecDropoutScenario(
     float dropout_begin = 1.0f,
     float dropout_end = .5f,
     int epoch_count = 0) {
 
-    Scenario scenario;
-    scenario.type = DropoutType::CONCAVE;
+    DropoutScenario scenario;
     scenario.name = "CONCAVE_DEC_DROPOUT_" +
+        std::to_string(dropout_begin) +
+        "_" + std::to_string(dropout_end);
+
+    auto concave_fn = [](float x) { return x * x; };
+    float concave_diff = concave_fn(static_cast<float>(epoch_count)) - concave_fn(0.0f);
+    float convace_fn_scale = concave_diff / (dropout_end - dropout_begin);
+    for (int i = 0; i < epoch_count; i++) {
+        scenario.dropouts.push_back(dropout_begin - concave_fn(static_cast<float>(i)) / convace_fn_scale);
+    }
+    return scenario;
+}
+
+static DropoutScenario createConvexDecDropoutScenario(
+    float dropout_begin = 1.0f,
+    float dropout_end = .5f,
+    int epoch_count = 0) {
+
+    DropoutScenario scenario;
+    scenario.name = "CONVEX_DEC_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
 
@@ -128,12 +132,11 @@ static Scenario createConcaveDecDropoutScenario(
     return scenario;
 }
 
-static Scenario createConvexDropoutScenario(float dropout_begin = 0.5f,
+static DropoutScenario createConvexDropoutScenario(float dropout_begin = 0.5f,
                                             float dropout_end = 1.0f,
                                             int epoch_count = 0) {
 
-    Scenario scenario;
-    scenario.type = DropoutType::CONVEX;
+    DropoutScenario scenario;
     scenario.name = "CONVEX_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);

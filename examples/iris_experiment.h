@@ -16,7 +16,7 @@ public:
     void run() override;
 
 private:
-    Dataset IrisExperiment::readIris() {
+    Dataset readIris();
 };
 
 #endif

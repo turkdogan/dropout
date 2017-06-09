@@ -18,7 +18,7 @@ void IrisExperiment::run() {
     config.addLayerConfig(150, 40, Activation::Sigmoid, true);
     config.addLayerConfig(40, 3, Activation::Softmax, false);
 
-	Scenario scenario = createConstantDropoutScenario(0.8f, config.epoch_count);
+	DropoutScenario scenario = createConstantDropoutScenario(0.8f, config.epoch_count);
 
     Network network(scenario, config);
 

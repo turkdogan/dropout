@@ -5,7 +5,7 @@
 #include "utils.h"
 
 Network::Network(
-	Scenario& scenario,
+	DropoutScenario& scenario,
 	NetworkConfig& config)
 	: m_scenario(scenario),
 	  m_config(config)
@@ -16,10 +16,10 @@ Network::Network(
 	layers = new Layer*[m_layer_count];
 	for (int i = 0; i < m_layer_count; i++) {
 		LayerConfig& layer_config = config.layer_configs[i];
-		if (layer_config.is_dropout) {
-			layers[i] = new DropoutLayer(layer_config, scenario);
-		} else {
+        if (scenario.dont_drop || !layer_config.is_dropout) {
 			layers[i] = new Layer(layer_config);
+		} else {
+			layers[i] = new DropoutLayer(layer_config, scenario);
 		}
 	}
 }
@@ -44,7 +44,6 @@ ScenarioResult Network::trainNetwork(
 
 		shuffleMatrixPair(input, target);
 		splitMatrixPair(input, target, input_buffer, target_buffer, m_config.batch_size);
-
 		float error = 0.0f;
 		for (int b = 0; b < input_buffer.size(); b++) {
 			error += iterate(input_buffer[b], target_buffer[b]);
@@ -107,15 +106,17 @@ float Network::iterate(Eigen::MatrixXf& input, Eigen::MatrixXf& target) {
 	Eigen::MatrixXf error = layers[m_layer_count-1]->Y - target;
 	backpropagate(error);
 	update();
-	Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
-	Eigen::MatrixXf log = clipped.array().log();
+	// Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
+	// Eigen::MatrixXf log = clipped.array().log();
+    Eigen::MatrixXf log = layers[m_layer_count-1]->Y.array().log();
 	return -(target.cwiseProduct(log).sum()) / input.rows();
 }
 
 float Network::validate(Eigen::MatrixXf& input, Eigen::MatrixXf& target) {
 	feedforward(input, true);
-	Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
-	Eigen::MatrixXf log = clipped.array().log();
+	// Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
+	// Eigen::MatrixXf log = clipped.array().log();
+    Eigen::MatrixXf log = layers[m_layer_count-1]->Y.array().log();
 	return -(target.cwiseProduct(log).sum()) / input.rows();
 }
 

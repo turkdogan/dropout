@@ -6,13 +6,14 @@
 class DropoutLayer : public Layer {
 
 public:
-    DropoutLayer(const LayerConfig& layerConfig, Scenario& scenario)
+    DropoutLayer(const LayerConfig& layerConfig, DropoutScenario& scenario)
         : Layer(layerConfig) {
-	}
+        m_scenario = scenario;
+    }
 
-	void feedforward(bool testing = false) override;
+    void feedforward(bool testing = false) override;
 
-	void backpropagate() override;
+    void backpropagate() override;
 
     void preEpoch(const int epoch) override;
 
@@ -20,10 +21,10 @@ public:
 
 private:
     Eigen::MatrixXf dropout_mask;
-	float dropout_ratio = 1.0f;
+    float dropout_ratio = 1.0f;
     std::vector<float> dropouts;
 
-    Scenario m_scenario;
+    DropoutScenario m_scenario;
 };
 
 #endif

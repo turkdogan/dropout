@@ -1,7 +1,10 @@
 #ifndef MNIST_DROPOUT_EXPERIMENT_H
 #define MNIST_DROPOUT_EXPERIMENT_H
 
+#include <vector>
+
 #include "../experiment.h"
+#include "../network.h"
 
 #include "../Eigen/Dense"
 
@@ -28,6 +31,10 @@ private:
                          Eigen::MatrixXf& test_input,
                          Eigen::MatrixXf& test_output,
                          std::ofstream& out_file);
+
+    NetworkConfig getConfig();
+
+	std::vector<DropoutScenario> getScenarios(int epoch_count);
 };
 
 #endif
