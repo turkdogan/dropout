@@ -1,4 +1,6 @@
-test
-Project
-.projectile
+*.projectile
 
+*.org
+Project
+python/input
+python/output

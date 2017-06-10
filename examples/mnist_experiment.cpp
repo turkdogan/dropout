@@ -26,7 +26,7 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {200, 500, 1000, 2000, 3000};
+    int dataset_sizes[] = {400, 3200, 10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
 
@@ -151,39 +151,42 @@ void MnistExperiment::runMnistNetwork(int trial,
 
     for (DropoutScenario& scenario : scenarios) {
         std::cout << "Running: " << scenario.name << std::endl;
-        srand(trial + 25);
+        srand(trial + 55);
 
         Network network(scenario, config);
-        ScenarioResult scenario_result = network.trainNetwork(
+        TrainingResult training_result = network.trainNetwork(
             train_input, train_output,
             validation_input, validation_output,
             false);
 
         int correct = network.test(test_input, test_output);
-        scenario_result.count = 10000;
-        scenario_result.correct = correct;
-        scenario_result.trial = trial;
-        scenario_result.dataset_size = dataset_size;
-        scenario_result.correct = correct;
+        training_result.count = 10000;
+        training_result.correct = correct;
+        training_result.trial = trial;
+        training_result.dataset_size = dataset_size;
+        training_result.correct = correct;
         std::string scenario_name =
             "MNIST_" +
             std::to_string(dataset_size) + "_" +
             /* std::to_string(trial) + "_" + */
             scenario.name + ".txt";
-        scenario_result.scenario_name = scenario_name;
-        //writeScenarioResult(scenario_result, scenario_name);
+        training_result.scenario_name = scenario_name;
+        //writeTrainingResult(training_result, scenario_name);
 
-        out_file << scenario_result.scenario_name << ", ";
-        out_file << scenario_result.trial << ", ";
-        out_file << scenario_result.dataset_size << ", ";
-        out_file << scenario_result.correct<< ", ";
+        out_file << training_result.scenario_name << ", ";
+        out_file << training_result.trial << ", ";
+        out_file << training_result.dataset_size << ", ";
+        out_file << training_result.correct<< ", ";
 
         float overfit = 0.0f;
 
-        for (int it = 0; it < scenario_result.errors.size(); it++) {
-            overfit += (-scenario_result.errors[it] + scenario_result.validation_errors[it]);
+        for (int it = 0; it < training_result.errors.size(); it++) {
+            float iter_diff = (-training_result.errors[it] + training_result.validation_errors[it]);
+            overfit += iter_diff / (training_result.errors[it] + training_result.validation_errors[it]);
         }
         out_file << overfit << std::endl;
+
+        writeTrainingResult(training_result, scenario_name + ".txt");
     }
 }
 
@@ -198,8 +201,10 @@ std::vector<DropoutScenario> MnistExperiment::getScenarios(int epoch_count) {
     DropoutScenario s8 = createConvexDropoutScenario(0.55f, 0.95f, epoch_count);
     DropoutScenario s9 = createConcaveDecDropoutScenario(1.0f, 0.5f, epoch_count);
     DropoutScenario s10 = createConcaveDecDropoutScenario(1.0f, 0.5f, epoch_count);
+    DropoutScenario s11= halfConcaveDropoutScenario(0.55f, 0.95f, epoch_count);
+    DropoutScenario s12 = halfConvexDropoutScenario(0.55f, 0.95f, epoch_count);
 
-    std::vector<DropoutScenario> scenarios = {s1, s4, s7, s9, s10};
+    std::vector<DropoutScenario> scenarios = {s1, s4, s7, s8, s9, s10, s11, s12};
     /* std::vector<DropoutScenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8}; */
     return scenarios;
 }
@@ -213,12 +218,12 @@ NetworkConfig MnistExperiment::getConfig() {
     NetworkConfig config;
     config.epoch_count = 120;
     config.report_each = 4;
-    config.batch_size = 10;
+    config.batch_size = 40;
     config.momentum = 0.9f;
     config.learning_rate = 0.002f;
 
-    config.addLayerConfig(dim1, dim2, Activation::Sigmoid, true);
-    config.addLayerConfig(dim2, dim3, Activation::Sigmoid, true);
+    config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
+    config.addLayerConfig(dim2, dim3, Activation::ReLU, true);
     /* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
     config.addLayerConfig(dim3, dim4, Activation::Softmax, false);
 

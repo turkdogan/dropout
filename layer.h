@@ -25,8 +25,13 @@ class Layer {
 
 public:
     Layer(const LayerConfig& layerConfig) {
-		W = xavierMatrix(layerConfig.rows, layerConfig.cols,
-                         layerConfig.activation == Activation::Sigmoid);
+        if (layerConfig.activation == Activation::Sigmoid) {
+            W = xavierMatrix(layerConfig.rows, layerConfig.cols, true);
+        } else if (layerConfig.activation == Activation::Sigmoid) {
+            W = xavierMatrix(layerConfig.rows, layerConfig.cols, false);
+        } else {
+            W = uniformMatrix(layerConfig.rows, layerConfig.cols, -0.05, 0.05);
+        }
 
 		W_change = Eigen::MatrixXf::Zero(W.rows(), W.cols());
 		B = Eigen::VectorXf::Ones(W.cols());

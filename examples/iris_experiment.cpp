@@ -23,7 +23,7 @@ void IrisExperiment::run() {
     Network network(scenario, config);
 
 	Dataset dataset = readIris();
-	ScenarioResult scenario_result = network.trainNetwork(
+	TrainingResult scenario_result = network.trainNetwork(
 		dataset.input, dataset.output,
 		dataset.input, dataset.output);
 	int correct = network.test(dataset.input, dataset.output);

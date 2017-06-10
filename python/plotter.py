@@ -63,13 +63,13 @@ def plot_charts(rates, name, legend_loc = 'lower right', save=True, x_label="", 
 def plot_err_validate_charts():
     files = [
         "NO_DROPOUT.txt",
-        "CONCAVE_DROPOUT_0.550000_0.950000.txt",
-        "CONVEX_DROPOUT_0.550000_0.950000.txt",
-        "LINEAR_DROPOUT_0.550000_0.950000.txt",
-        "CONSTANT_DROPOUT_0.500000.txt",
-        "CONSTANT_DROPOUT_0.700000.txt",
-        "CONSTANT_DROPOUT_0.800000.txt",
-        "CONSTANT_DROPOUT_0.900000.txt"
+        # "CONCAVE_DROPOUT_0.550000_0.950000.txt",
+        # "CONVEX_DROPOUT_0.550000_0.950000.txt",
+        # "LINEAR_DROPOUT_0.550000_0.950000.txt",
+        # "CONSTANT_DROPOUT_0.500000.txt",
+        # "CONSTANT_DROPOUT_0.700000.txt",
+        # "CONSTANT_DROPOUT_0.800000.txt",
+        # "CONSTANT_DROPOUT_0.900000.txt"
     ]
 
     for file_name in files:
@@ -90,8 +90,8 @@ def plot_err_validate_charts():
             merged_validation[0,:] = np.arange(0, it_count)
 
             plot_map = {}
-            plot_map['Errors'] = merged_errors
-            plot_map['Validation'] = merged_validation
+            plot_map['Training Errors'] = merged_errors
+            plot_map['Validation Error'] = merged_validation
             plot_charts(plot_map, str(train_size) + "_" + file_name + ".png", legend_loc="upper right", x_label="Iteratation " + str(train_size) + file_name, y_label = "Cross entropy error (MNIST 1000)")
 
 
@@ -328,11 +328,12 @@ def plotOverfits(file_name):
             "overfit": float(line_data[4])})
     plot_batch_overfit(dataset)
 
-# weights("W0_MNIST_60000_0_NO_DROPOUT.txt")
+# weights("W0_MNIST_3000_CONCAVE_DEC_DROPOUT_1.000000_0.500000.txt")
+
 #iterations()
 #rates()
 #plot_equation()
 # its()
 # plot_all_weights()
-# plot_err_validate_charts()
-plotOverfits("mnist.txt")
+plot_err_validate_charts()
+# plotOverfits("mnist.txt")

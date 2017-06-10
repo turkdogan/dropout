@@ -75,12 +75,6 @@ static void fill_uniform(Eigen::MatrixXf& mat, float a)
 	}
 }
 
-static void fill_xavier(Eigen::MatrixXf& mat) {
-	/* float high = std::sqrt(6.0 / (mat.rows() + mat.cols())); // tanh */
-	float high = 4.0f * std::sqrt(6.0f / (mat.rows() + mat.cols())); // sigmoid
-	fill_uniform(mat, high);
-}
-
 static Eigen::MatrixXf uniformMatrix(int rows, int cols, float low, float high) {
 	Eigen::MatrixXf result(rows, cols);
 

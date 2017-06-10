@@ -36,7 +36,7 @@ void runXorLayers() {
     DropoutScenario scenario = createNoDropoutScenario();
 
     Network network(scenario, config);
-    ScenarioResult scenario_result = network.trainNetwork(
+    TrainingResult scenario_result = network.trainNetwork(
         input, output,
         input, output);
     int correct = network.test(input, output);
