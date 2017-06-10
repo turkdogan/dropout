@@ -26,7 +26,7 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {400, 3200, 10000};
+    int dataset_sizes[] = {400, 1000, 3200, 10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
 
@@ -171,7 +171,6 @@ void MnistExperiment::runMnistNetwork(int trial,
             /* std::to_string(trial) + "_" + */
             scenario.name + ".txt";
         training_result.scenario_name = scenario_name;
-        //writeTrainingResult(training_result, scenario_name);
 
         out_file << training_result.scenario_name << ", ";
         out_file << training_result.trial << ", ";
@@ -203,8 +202,11 @@ std::vector<DropoutScenario> MnistExperiment::getScenarios(int epoch_count) {
     DropoutScenario s10 = createConcaveDecDropoutScenario(1.0f, 0.5f, epoch_count);
     DropoutScenario s11= halfConcaveDropoutScenario(0.55f, 0.95f, epoch_count);
     DropoutScenario s12 = halfConvexDropoutScenario(0.55f, 0.95f, epoch_count);
+    DropoutScenario s13= halfConcaveDecDropoutScenario(0.55f, 0.95f, epoch_count);
+    DropoutScenario s14 = halfConvexDecDropoutScenario(0.55f, 0.95f, epoch_count);
 
-    std::vector<DropoutScenario> scenarios = {s1, s4, s7, s8, s9, s10, s11, s12};
+    std::vector<DropoutScenario> scenarios = {s1, s2, s4, s7, s8, s9, s10,
+                                              s11, s12, s13, s14};
     /* std::vector<DropoutScenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8}; */
     return scenarios;
 }

@@ -181,4 +181,48 @@ static DropoutScenario halfConcaveDropoutScenario(
     return scenario;
 }
 
+static DropoutScenario halfConvexDecDropoutScenario(float dropout_begin = 1.0f,
+                                                 float dropout_end = 0.5f,
+                                                 int epoch_count = 0) {
+    DropoutScenario scenario;
+    scenario.name = "HALF_CONVEX_DEC_DROPOUT_" +
+        std::to_string(dropout_begin) +
+        "_" + std::to_string(dropout_end);
+
+    for (int i = 0; i < epoch_count/2; i++) {
+        scenario.dropouts.push_back(1.0f);
+    }
+
+    auto convex_fn = [](float x) { return x * x; };
+    float convex_diff = convex_fn(static_cast<float>(epoch_count/2)) - convex_fn(0.0f);
+    float convex_fn_scale = convex_diff / (dropout_begin - dropout_end);
+    for (int i = epoch_count/2; i < epoch_count; i++) {
+        scenario.dropouts.push_back(1.0f - convex_fn(i + 1 - epoch_count/2) / convex_fn_scale);
+    }
+    return scenario;
+}
+
+static DropoutScenario halfConcaveDecDropoutScenario(
+    float dropout_begin = 1.0f,
+    float dropout_end = 0.5f,
+    int epoch_count = 0) {
+
+    DropoutScenario scenario;
+    scenario.name = "HALF_CONCAVE_DEC_DROPOUT_" +
+        std::to_string(dropout_begin) +
+        "_" + std::to_string(dropout_end);
+
+    for (int i = 0; i < epoch_count/2; i++) {
+        scenario.dropouts.push_back(1.0f);
+    }
+
+    auto concave_fn = [](float x) { return sqrt(x); };
+    float concave_diff = concave_fn(static_cast<float>(epoch_count - epoch_count/2)) - concave_fn(0.0f);
+    float convace_fn_scale = concave_diff / (dropout_begin - dropout_end);
+    for (int i = epoch_count/2; i < epoch_count; i++) {
+        scenario.dropouts.push_back(1.0f - concave_fn(i + 1 - epoch_count/2) / convace_fn_scale);
+    }
+    return scenario;
+}
+
 #endif
