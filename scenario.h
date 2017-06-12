@@ -140,7 +140,7 @@ static DropoutScenario halfConvexDropoutScenario(float dropout_begin = 0.5f,
                                                    float dropout_end = 1.0f,
                                                    int epoch_count = 0) {
     DropoutScenario scenario;
-    scenario.name = "HALF_CONVEX_DROPOUT_" +
+    scenario.name = "HALF-CONVEX_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
 
@@ -164,7 +164,7 @@ static DropoutScenario halfConcaveDropoutScenario(
     int epoch_count = 0) {
 
     DropoutScenario scenario;
-    scenario.name = "HALF_CONCAVE_DROPOUT_" +
+    scenario.name = "HALF-CONCAVE-DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
 
@@ -185,7 +185,7 @@ static DropoutScenario halfConvexDecDropoutScenario(float dropout_begin = 1.0f,
                                                  float dropout_end = 0.5f,
                                                  int epoch_count = 0) {
     DropoutScenario scenario;
-    scenario.name = "HALF_CONVEX_DEC_DROPOUT_" +
+    scenario.name = "HALF-CONVEX-DEC_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
 
@@ -208,7 +208,7 @@ static DropoutScenario halfConcaveDecDropoutScenario(
     int epoch_count = 0) {
 
     DropoutScenario scenario;
-    scenario.name = "HALF_CONCAVE_DEC_DROPOUT_" +
+    scenario.name = "HALF-CONCAVE-DEC_DROPOUT_" +
         std::to_string(dropout_begin) +
         "_" + std::to_string(dropout_end);
 

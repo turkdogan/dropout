@@ -29,14 +29,12 @@ void MnistExperiment::run() {
     int dataset_sizes[] = {400, 1000, 3200, 10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
-
-            Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
-            Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
-
             runMnistNetwork(trial,
                             dataset_size,
-                            train_input,
-                            train_output,
+                            input,
+                            output,
+                            // train_input,
+                            // train_output,
                             validation_input,
                             validation_output,
                             test_input,
@@ -137,8 +135,8 @@ Eigen::MatrixXf MnistExperiment::readMnistOutput(const std::string& path,
 
 void MnistExperiment::runMnistNetwork(int trial,
                      int dataset_size,
-                     Eigen::MatrixXf& train_input,
-                     Eigen::MatrixXf& train_output,
+                     Eigen::MatrixXf& input,
+                     Eigen::MatrixXf& output,
                      Eigen::MatrixXf& validation_input,
                      Eigen::MatrixXf& validation_output,
                      Eigen::MatrixXf& test_input,
@@ -152,6 +150,10 @@ void MnistExperiment::runMnistNetwork(int trial,
     for (DropoutScenario& scenario : scenarios) {
         std::cout << "Running: " << scenario.name << std::endl;
         srand(trial + 55);
+
+        // read data from scratch
+        Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
+        Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
 
         Network network(scenario, config);
         TrainingResult training_result = network.trainNetwork(
@@ -198,12 +200,12 @@ std::vector<DropoutScenario> MnistExperiment::getScenarios(int epoch_count) {
     DropoutScenario s6 = createLinearDropoutScenario(0.55f, 0.95f, epoch_count);
     DropoutScenario s7 = createConcaveDropoutScenario(0.55f, 0.95f, epoch_count);
     DropoutScenario s8 = createConvexDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s9 = createConcaveDecDropoutScenario(1.0f, 0.5f, epoch_count);
-    DropoutScenario s10 = createConcaveDecDropoutScenario(1.0f, 0.5f, epoch_count);
+    DropoutScenario s9 = createConcaveDecDropoutScenario(0.95f, 0.5f, epoch_count);
+    DropoutScenario s10 = createConcaveDecDropoutScenario(0.95f, 0.5f, epoch_count);
     DropoutScenario s11= halfConcaveDropoutScenario(0.55f, 0.95f, epoch_count);
     DropoutScenario s12 = halfConvexDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s13= halfConcaveDecDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s14 = halfConvexDecDropoutScenario(0.55f, 0.95f, epoch_count);
+    DropoutScenario s13= halfConcaveDecDropoutScenario(0.95f, 0.55f, epoch_count);
+    DropoutScenario s14 = halfConvexDecDropoutScenario(0.95f, 0.55f, epoch_count);
 
     std::vector<DropoutScenario> scenarios = {s1, s2, s4, s7, s8, s9, s10,
                                               s11, s12, s13, s14};

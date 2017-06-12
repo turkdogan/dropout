@@ -6,7 +6,7 @@ from random import randint
 
 import os, fnmatch
 
-def plot_weights(data, file_name="", x_label="", y_label="",dim_x=28, dim_y=28, count=100):
+def plot_weight_chart(data, file_name="", x_label="", y_label="",dim_x=28, dim_y=28, count=100):
     vmin, vmax = data.min(), data.max()
 
     fig = plt.figure()
@@ -34,18 +34,17 @@ def plot_weights(data, file_name="", x_label="", y_label="",dim_x=28, dim_y=28, 
 
     plt.savefig("output/" + file_name + ".png", dpi=100)
 
-def plot_weights(file_name, dim_x=28, dim_y=28):
-    f = open(file_name)
+def plot_weights(file_name, dim__x=28, dim__y=28):
+    f = open("input/" + file_name)
     lines = f.readlines();
     data = np.loadtxt(lines)
-    print(data.shape)
-    plot_weights(data, file_name, dim_x=dim_x, dim_y=dim_y);
+    plot_weight_chart(data, file_name, x_label=file_name, dim_x=dim__x, dim_y=dim__y);
 
 def plot_all_weights(weight_file_pattern):
-    files = fnmatch.filter(os.listdir('.'), weight_file_pattern)
+    files = fnmatch.filter(os.listdir('input'), weight_file_pattern)
     for f in files:
-        plot_weights(f,dim_x=28,dim_y=28)
+        plot_weights(f, 28, 28)
     print(files)
 
-plot_all_weights("input/W0*.txt")
+plot_all_weights("W0*.txt")
 # plot_weights("W0_MNIST_3000_CONCAVE_DEC_DROPOUT_1.000000_0.500000.txt")

@@ -15,7 +15,7 @@ def plot_batch_overfit(dataset):
 
     # ax1.plot(x, y, color = (0, i / 20.0, 0, 1)
 
-    colors = ["g", "c", "y", "b", "r", "m", "k", "violet"]
+    colors = ["r", "c", "y", "b", "g", "m", "k", "violet", "lime", "dimgray", "yellow"]
     scenarios = []
 
     # axes = plt.gca()
