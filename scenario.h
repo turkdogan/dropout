@@ -5,22 +5,7 @@
 #include <vector>
 
 #include "Eigen/Dense"
-
-struct DropoutScenario {
-    bool dont_drop = false;
-
-    std::vector<float> dropouts;
-
-    float averageDropout() {
-        float sum = 0.0f;
-        for (float value : dropouts) {
-            sum += value;
-        }
-        return sum / dropouts.size();
-    }
-
-    std::string name;
-};
+#include "dropout_scenario.h"
 
 static DropoutScenario createNoDropoutScenario() {
     DropoutScenario scenario;
