@@ -145,10 +145,10 @@ void MnistExperiment::runMnistNetwork(int trial,
 
     NetworkConfig config = getConfig();
 
-    std::vector<DropoutScenario> scenarios = getScenarios(config.epoch_count);
+    std::vector<Scenario> scenarios = getScenarios(config.epoch_count);
 
-    for (DropoutScenario& scenario : scenarios) {
-        std::cout << "Running: " << scenario.name << std::endl;
+    for (Scenario& scenario : scenarios) {
+        std::cout << "Running: " << scenario.name()<< std::endl;
         srand(trial + 55);
 
         // read data from scratch
@@ -171,7 +171,7 @@ void MnistExperiment::runMnistNetwork(int trial,
             "MNIST_" +
             std::to_string(dataset_size) + "_" +
             /* std::to_string(trial) + "_" + */
-            scenario.name + ".txt";
+            scenario.name() + ".txt";
         training_result.scenario_name = scenario_name;
 
         out_file << training_result.scenario_name << ", ";
@@ -191,25 +191,37 @@ void MnistExperiment::runMnistNetwork(int trial,
     }
 }
 
-std::vector<DropoutScenario> MnistExperiment::getScenarios(int epoch_count) {
-    DropoutScenario s1 = createNoDropoutScenario();
-    DropoutScenario s2 = createConstantDropoutScenario(0.5f, epoch_count);
-    DropoutScenario s3 = createConstantDropoutScenario(0.7f, epoch_count);
-    DropoutScenario s4 = createConstantDropoutScenario(0.8f, epoch_count);
-    DropoutScenario s5 = createConstantDropoutScenario(0.9f, epoch_count);
-    DropoutScenario s6 = createLinearDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s7 = createConcaveDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s8 = createConvexDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s9 = createConcaveDecDropoutScenario(0.95f, 0.5f, epoch_count);
-    DropoutScenario s10 = createConcaveDecDropoutScenario(0.95f, 0.5f, epoch_count);
-    DropoutScenario s11= halfConcaveDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s12 = halfConvexDropoutScenario(0.55f, 0.95f, epoch_count);
-    DropoutScenario s13= halfConcaveDecDropoutScenario(0.95f, 0.55f, epoch_count);
-    DropoutScenario s14 = halfConvexDecDropoutScenario(0.95f, 0.55f, epoch_count);
+std::vector<Scenario> MnistExperiment::getScenarios(int epoch_count) {
 
-    std::vector<DropoutScenario> scenarios = {s1, s2, s4, s7, s8, s9, s10,
+    Scenario s1("NO-DROPOUT");
+
+    auto convex_fn  = [](int epoch) {return epoch * epoch;};
+    auto concave_fn = [](int epoch) {return sqrt(epoch);};
+    auto linear_fn  = [](int epoch) {return epoch;};
+
+    Scenario s2("C0.5", epoch_count, 0.5f);
+    Scenario s3("C0.7", epoch_count, 0.7f);
+    Scenario s4("C0.8", epoch_count, 0.8f);
+    Scenario s5("C0.9", epoch_count, 0.9f);
+
+    Scenario s6("L055-095", epoch_count, 0.55f, 0.95f, linear_fn);
+
+    Scenario s7("Concave055-095", epoch_count, 0.55f, 0.95f, concave_fn);
+    Scenario s8("Convex0.55-095", epoch_count, 0.55f, 0.95f, convex_fn);
+
+    Scenario s9("Concave095-055", epoch_count, 0.95f, 0.55f, concave_fn);
+    Scenario s10("Convex0.95-055", epoch_count, 0.95f, 0.55f, convex_fn);
+
+    Scenario s11("Concave055-095", epoch_count, epoch_count
+                 /2, 0.55f, 0.95f, concave_fn);
+    Scenario s12("Convex0.55-095", epoch_count, epoch_count/2, 0.55f, 0.95f, convex_fn);
+
+    Scenario s13("Concave095-055", epoch_count, epoch_count/2, 0.95f, 0.55f, concave_fn);
+    Scenario s14("Convex0.95-055", epoch_count, epoch_count/2, 0.95f, 0.55f, convex_fn);
+
+    std::vector<Scenario> scenarios = {s1, s2, s4, s7, s8, s9, s10,
                                               s11, s12, s13, s14};
-    /* std::vector<DropoutScenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8}; */
+    /* std::vector<Scenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8}; */
     return scenarios;
 }
 

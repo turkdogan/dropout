@@ -1,7 +1,6 @@
 #include "catch.hpp"
 
 #include "../scenario.h"
-#include "../dropout_scenario.h"
 
 const float EPSILON = 0.01f;
 

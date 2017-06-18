@@ -3,7 +3,7 @@
 void DropoutLayer::feedforward(bool testing) {
     Layer::feedforward(testing);
     if (testing) {
-        Y = Y * averageDropuot();
+        Y = Y * m_scenario.averageDropout();
     }
     else {
         dropout_mask = binomial(Y.rows(), Y.cols(), dropout_ratio);
@@ -21,14 +21,6 @@ void DropoutLayer::backpropagate() {
 */
 void DropoutLayer::preEpoch(const int epoch) {
     Layer::preEpoch(epoch);
-    dropout_ratio = m_scenario.dropouts[epoch];
+    dropout_ratio = m_scenario.getKeepRate(epoch);
     dropouts.push_back(dropout_ratio);
-}
-
-float DropoutLayer::averageDropuot() const {
-    float total = 0.0f;
-    for (float dropout : dropouts) {
-        total += dropout;
-    }
-    return total / dropouts.size();
 }

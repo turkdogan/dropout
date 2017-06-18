@@ -1,266 +1,63 @@
-#ifndef SCENARIO_H
-#define SCENARIO_H
+#ifndef DROPOUT_SCENARIO_H
+#define DROPOUT_SCENARIO_H
 
-#include <fstream>
 #include <vector>
+#include <functional>
 
-#include "Eigen/Dense"
-#include "dropout_scenario.h"
+struct DropoutScenario {
+    bool dont_drop = false;
 
-static Scenario _createNoDropoutScenario() {
-    Scenario scenario("NA");
-    return scenario;
-}
+    std::vector<double> dropouts;
 
-static DropoutScenario createNoDropoutScenario() {
-    DropoutScenario scenario;
-    scenario.dont_drop = true;
-    scenario.name = "NO_DROPOUT";
-    return scenario;
-}
-
-static Scenario _createConstantDropoutScenario(float keep_rate = 0.5f,
-                                              int epoch_count = 0) {
-    std::string name = "CONSTANT_" + std::to_string(keep_rate);
-    Scenario scenario(name, epoch_count, keep_rate);
-    return scenario;
-}
-
-static DropoutScenario createConstantDropoutScenario(float dropout = 0.5f,
-                                   int epoch_count = 0) {
-
-    DropoutScenario scenario;
-    scenario.name = "CONSTANT_DROPOUT_" + std::to_string(dropout);
-
-    for (int i = 0; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout);
-    }
-    return scenario;
-}
-
-static Scenario _createLinearDropoutScenario(
-    float dropout_begin = 0.5f,
-    float dropout_end = 1.0f,
-    int epoch_count = 0) {
-
-    std::string name = "LINEAR_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto linear_fn = [](float x) { return sqrt(x); };
-    Scenario scenario(name, epoch_count, dropout_begin, dropout_end, linear_fn);
-    return scenario;
-}
-
-static DropoutScenario createLinearDropoutScenario(
-    float dropout_begin = 0.5f,
-    float dropout_end = 1.0f,
-    int epoch_count = 0) {
-
-    DropoutScenario scenario;
-    scenario.name = "LINEAR_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto linear_fn = [](float x) { return sqrt(x); };
-    float linear_diff = linear_fn(static_cast<float>(epoch_count)) - linear_fn(0.0f);
-    float linear_fn_scale = linear_diff / (dropout_end - dropout_begin);
-    for (int i = 0; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin + linear_fn(static_cast<float>(i)) / linear_fn_scale);
-    }
-    return scenario;
-}
-
-static Scenario _createConcaveDropoutScenario(
-    float dropout_begin = 0.5f,
-    float dropout_end = 1.0f,
-    int epoch_count = 0) {
-
-    std::string name = "CONCAVE_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto concave_fn = [](float x) { return sqrt(x); };
-
-    Scenario scenario(name, epoch_count, dropout_begin, dropout_end, concave_fn);
-    return scenario;
-}
-
-static DropoutScenario createConcaveDropoutScenario(
-                                 float dropout_begin = 0.5f,
-                                 float dropout_end = 1.0f,
-                                 int epoch_count = 0) {
-
-    DropoutScenario scenario;
-    scenario.name = "CONCAVE_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-
-    auto concave_fn = [](float x) { return sqrt(x); };
-    float concave_diff = concave_fn(static_cast<float>(epoch_count)) - concave_fn(0.0f);
-    float convace_fn_scale = concave_diff / (dropout_end - dropout_begin);
-    for (int i = 0; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin + concave_fn(static_cast<float>(i)) / convace_fn_scale);
-    }
-    return scenario;
-}
-
-static DropoutScenario createConcaveDecDropoutScenario(
-    float dropout_begin = 1.0f,
-    float dropout_end = .5f,
-    int epoch_count = 0) {
-
-    DropoutScenario scenario;
-    scenario.name = "CONCAVE_DEC_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto concave_fn = [](float x) { return x * x; };
-    float concave_diff = concave_fn(static_cast<float>(epoch_count)) - concave_fn(0.0f);
-    float convace_fn_scale = concave_diff / (dropout_begin - dropout_end);
-    for (int i = 0; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin - concave_fn(static_cast<float>(i)) / convace_fn_scale);
-    }
-    return scenario;
-}
-
-static DropoutScenario createConvexDecDropoutScenario(
-    float dropout_begin = 1.0f,
-    float dropout_end = .5f,
-    int epoch_count = 0) {
-
-    DropoutScenario scenario;
-    scenario.name = "CONVEX_DEC_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto concave_fn = [](float x) { return sqrt(x); };
-    float concave_diff = concave_fn(static_cast<float>(epoch_count)) - concave_fn(0.0f);
-    float convace_fn_scale = concave_diff / (dropout_begin - dropout_end);
-    for (int i = 0; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin - concave_fn(static_cast<float>(i)) / convace_fn_scale);
-    }
-    return scenario;
-}
-
-static Scenario _createConvexDropoutScenario(float dropout_begin = 0.5f,
-                                                   float dropout_end = 1.0f,
-                                                   int epoch_count = 0) {
-    std::string name = "CONVEX_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto convex_fn = [](float x) { return x * x; };
-    Scenario scenario(name, epoch_count, dropout_begin, dropout_end, convex_fn);
-    return scenario;
-}
-
-static DropoutScenario createConvexDropoutScenario(float dropout_begin = 0.5f,
-                                            float dropout_end = 1.0f,
-                                            int epoch_count = 0) {
-
-    DropoutScenario scenario;
-    scenario.name = "CONVEX_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-    auto convex_fn = [](float x) { return x * x; };
-    float convex_diff = convex_fn(static_cast<float>(epoch_count)) - convex_fn(0.0f);
-    float convex_fn_scale = convex_diff / (dropout_end - dropout_begin);
-    for (int i = 0; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin + convex_fn(static_cast<float>(i)) / convex_fn_scale);
-    }
-    return scenario;
-}
-
-static DropoutScenario halfConvexDropoutScenario(float dropout_begin = 0.5f,
-                                                   float dropout_end = 1.0f,
-                                                   int epoch_count = 0) {
-    DropoutScenario scenario;
-    scenario.name = "HALF-CONVEX_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
-
-
-    for (int i = 0; i < epoch_count/2; i++) {
-        scenario.dropouts.push_back(1.0f);
+    double averageDropout() {
+        double sum = 0.0f;
+        for (double value : dropouts) {
+            sum += value;
+        }
+        return sum / dropouts.size();
     }
 
-    auto convex_fn = [](float x) { return x * x; };
-    float convex_diff = convex_fn(static_cast<float>(epoch_count/2)) - convex_fn(0.0f);
-    float convex_fn_scale = convex_diff / (dropout_end - dropout_begin);
-    for (int i = epoch_count/2; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin + convex_fn(i + 1 - epoch_count/2) / convex_fn_scale);
-    }
-    return scenario;
-}
+    std::string name;
+};
 
-static DropoutScenario halfConcaveDropoutScenario(
-    float dropout_begin = 0.5f,
-    float dropout_end = 1.0f,
-    int epoch_count = 0) {
+class Scenario {
 
-    DropoutScenario scenario;
-    scenario.name = "HALF-CONCAVE-DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
+public:
+    // no dropout
+    Scenario(std::string name);
 
-    for (int i = 0; i < epoch_count/2; i++) {
-        scenario.dropouts.push_back(1.0f);
-    }
+    // constant dropout
+    Scenario(std::string name, int epoch_count, double keep_rate);
 
-    auto concave_fn = [](float x) { return sqrt(x); };
-    float concave_diff = concave_fn(static_cast<float>(epoch_count - epoch_count/2)) - concave_fn(0.0f);
-    float convace_fn_scale = concave_diff / (dropout_end - dropout_begin);
-    for (int i = epoch_count/2; i < epoch_count; i++) {
-        scenario.dropouts.push_back(dropout_begin + concave_fn(i + 1 - epoch_count/2) / convace_fn_scale);
-    }
-    return scenario;
-}
+    // full dropout: use fn to calculate for each epoch
+    Scenario(std::string name,
+             int epoch_count,
+             double keep_begin_rate,
+             double keep_end_rate,
+             std::function<double(int)>);
 
-static DropoutScenario halfConvexDecDropoutScenario(float dropout_begin = 1.0f,
-                                                 float dropout_end = 0.5f,
-                                                 int epoch_count = 0) {
-    DropoutScenario scenario;
-    scenario.name = "HALF-CONVEX-DEC_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
+    // semi dropout: apply epochs between start_epoch_from -> epoch_count
+    Scenario(std::string name,
+             int epoch_count,
+             int epoch_to_skip,
+             double keep_begin_rate,
+             double keep_end_rate,
+             std::function<double(int)>);
 
-    for (int i = 0; i < epoch_count/2; i++) {
-        scenario.dropouts.push_back(1.0f);
-    }
+    bool isEnabled() const;
 
-    auto convex_fn = [](float x) { return x * x; };
-    float convex_diff = convex_fn(static_cast<float>(epoch_count/2)) - convex_fn(0.0f);
-    float convex_fn_scale = convex_diff / (dropout_begin - dropout_end);
-    for (int i = epoch_count/2; i < epoch_count; i++) {
-        scenario.dropouts.push_back(1.0f - convex_fn(i + 1 - epoch_count/2) / convex_fn_scale);
-    }
-    return scenario;
-}
+    double getKeepRate(int epoch) const;
 
-static DropoutScenario halfConcaveDecDropoutScenario(
-    float dropout_begin = 1.0f,
-    float dropout_end = 0.5f,
-    int epoch_count = 0) {
+    double averageDropout() const;
 
-    DropoutScenario scenario;
-    scenario.name = "HALF-CONCAVE-DEC_DROPOUT_" +
-        std::to_string(dropout_begin) +
-        "_" + std::to_string(dropout_end);
+    int size() const;
 
-    for (int i = 0; i < epoch_count/2; i++) {
-        scenario.dropouts.push_back(1.0f);
-    }
+    std::string name() const;
 
-    auto concave_fn = [](float x) { return sqrt(x); };
-    float concave_diff = concave_fn(static_cast<float>(epoch_count - epoch_count/2)) - concave_fn(0.0f);
-    float convace_fn_scale = concave_diff / (dropout_begin - dropout_end);
-    for (int i = epoch_count/2; i < epoch_count; i++) {
-        scenario.dropouts.push_back(1.0f - concave_fn(i + 1 - epoch_count/2) / convace_fn_scale);
-    }
-    return scenario;
-}
+private:
+    std::vector<double> m_dropouts;
+
+    std::string m_name;
+};
 
 #endif

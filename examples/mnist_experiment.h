@@ -34,7 +34,7 @@ private:
 
     NetworkConfig getConfig();
 
-	std::vector<DropoutScenario> getScenarios(int epoch_count);
+	std::vector<Scenario> getScenarios(int epoch_count);
 };
 
 #endif

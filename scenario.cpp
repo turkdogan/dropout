@@ -1,4 +1,4 @@
-#include "dropout_scenario.h"
+#include "scenario.h"
 
 #include <cassert>
 
@@ -6,28 +6,29 @@ Scenario::Scenario(std::string name)
     :m_name (name) {
 }
 
-Scenario::Scenario(std::string name, int epoch_count, float keep_rate)
+Scenario::Scenario(std::string name, int epoch_count, double keep_rate)
     :m_name(name) {
     m_dropouts.assign(epoch_count, keep_rate);
 }
 
 Scenario::Scenario(std::string name,
                    int epoch_count,
-                   float keep_begin_rate,
-                   float keep_end_rate,
-                   std::function<int(int)> generator)
+                   double keep_begin_rate,
+                   double keep_end_rate,
+                   std::function<double(int)> generator)
     :m_name(name) {
 
     bool incremental = keep_end_rate > keep_begin_rate;
 
-    float diff = generator(epoch_count);
-    float keep_diff = keep_end_rate - keep_begin_rate;
+    double diff = generator(epoch_count-1);
+    double keep_diff = keep_end_rate - keep_begin_rate;
     if (!incremental) {
         keep_diff *= -1;
     }
-    float scale = diff / keep_diff;
-    for (int i = 0; i < epoch_count; i++) {
-        int generated = generator(i);
+    double scale = diff / keep_diff;
+    m_dropouts.push_back(keep_begin_rate);
+    for (int i = 1; i < epoch_count; i++) {
+        double generated = generator(i);
         if (incremental) {
             m_dropouts.push_back(keep_begin_rate + generated/scale);
         } else {
@@ -39,9 +40,9 @@ Scenario::Scenario(std::string name,
 Scenario::Scenario(std::string name,
                    int epoch_count,
                    int epoch_to_skip,
-                   float keep_begin_rate,
-                   float keep_end_rate,
-                   std::function<int(int)> generator)
+                   double keep_begin_rate,
+                   double keep_end_rate,
+                   std::function<double(int)> generator)
     :m_name(name) {
     m_dropouts.assign(epoch_to_skip, 1.0);
 
@@ -52,12 +53,12 @@ Scenario::Scenario(std::string name,
     bool incremental = keep_end_rate > keep_begin_rate;
 
     int n_epoch_to_generate = epoch_count - epoch_to_skip -1;
-    int diff = generator(n_epoch_to_generate);
-    float keep_diff = keep_end_rate - keep_begin_rate;
+    double diff = generator(n_epoch_to_generate);
+    double keep_diff = keep_end_rate - keep_begin_rate;
     if (!incremental) {
         keep_diff *= -1;
     }
-    float scale = diff / (keep_diff);
+    double scale = diff / (keep_diff);
 
     m_dropouts.push_back(keep_begin_rate);
     for (int i = epoch_to_skip+1; i < epoch_count; i++) {
@@ -69,14 +70,14 @@ Scenario::Scenario(std::string name,
     }
 }
 
-float Scenario::getKeepRate(int epoch) const {
+double Scenario::getKeepRate(int epoch) const {
     assert(epoch < m_dropouts.size());
     return m_dropouts[epoch];
 }
 
-float Scenario::averageDropout() const {
-    float sum = 0.0f;
-    for (float value : m_dropouts) {
+double Scenario::averageDropout() const {
+    double sum = 0.0f;
+    for (double value : m_dropouts) {
         sum += value;
     }
     return sum / m_dropouts.size();
@@ -88,4 +89,8 @@ bool Scenario::isEnabled() const {
 
 int Scenario::size() const {
     return m_dropouts.size();
+}
+
+std::string Scenario::name() const {
+    return m_name;
 }

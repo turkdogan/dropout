@@ -33,7 +33,7 @@ void runXorLayers() {
     config.addLayerConfig(15, 5, Activation::Sigmoid);
     config.addLayerConfig(5, 1, Activation::Sigmoid);
 
-    DropoutScenario scenario = createNoDropoutScenario();
+    Scenario scenario = createNoScenario();
 
     Network network(scenario, config);
     TrainingResult scenario_result = network.trainNetwork(
