@@ -2,6 +2,7 @@
 #define DROPOUT_SCENARIO_H
 
 #include <vector>
+#include <functional>
 
 struct DropoutScenario {
     bool dont_drop = false;
@@ -23,18 +24,33 @@ class Scenario {
 
 public:
     // no dropout
-    Scenario(std::string name, int epoch_count);
+    Scenario(std::string name);
+
     // constant dropout
     Scenario(std::string name, int epoch_count, float keep_rate);
+
     // full dropout: use fn to calculate for each epoch
-    Scenario(std::string name, int epoch_count, std::function<float>(float));
+    Scenario(std::string name,
+             int epoch_count,
+             float keep_begin_rate,
+             float keep_end_rate,
+             std::function<int(int)>);
+
     // semi dropout: apply epochs between start_epoch_from -> epoch_count
-    Scenario(std::string name, int epoch_count, std::function<float>(float), int start_epoch_from);
+    Scenario(std::string name,
+             int epoch_count,
+             int epoch_to_skip,
+             float keep_begin_rate,
+             float keep_end_rate,
+             std::function<int(int)>);
 
-    bool enabled();
+    bool isEnabled() const;
 
-    float getKeepRate(int epoch);
-    float averageDropout();
+    float getKeepRate(int epoch) const;
+
+    float averageDropout() const;
+
+    int size() const;
 
 private:
     std::vector<float> m_dropouts;
