@@ -71,10 +71,8 @@ int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    testScenarios();
-
-    // MnistExperiment mnist_experiment;
-    // mnist_experiment.run();
+    MnistExperiment mnist_experiment;
+    mnist_experiment.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;

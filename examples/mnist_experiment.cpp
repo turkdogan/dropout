@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "../utils.h"
+#include "../network_utils.h"
 #include "../scenario.h"
 
 void MnistExperiment::run() {
@@ -145,9 +146,14 @@ void MnistExperiment::runMnistNetwork(int trial,
 
     NetworkConfig config = getConfig();
 
-    std::vector<Scenario> scenarios = getScenarios(config.epoch_count);
+    std::map<std::string, std::vector<Scenario>>&& map = getScenarios(config.epoch_count);
 
-    for (Scenario& scenario : scenarios) {
+    for (const auto& pair : map) {
+        const std::string& category = pair.first;
+        std::vector<Scenario> scenarios = pair.second;
+
+        for (const Scenario& scenario : scenarios) {
+
         std::cout << "Running: " << scenario.name()<< std::endl;
         srand(trial + 55);
 
@@ -155,7 +161,8 @@ void MnistExperiment::runMnistNetwork(int trial,
         Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
         Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
 
-        Network network(scenario, config);
+        config.scenario = scenario;
+        Network network(config);
         TrainingResult training_result = network.trainNetwork(
             train_input, train_output,
             validation_input, validation_output,
@@ -172,9 +179,11 @@ void MnistExperiment::runMnistNetwork(int trial,
             std::to_string(dataset_size) + "_" +
             /* std::to_string(trial) + "_" + */
             scenario.name() + ".txt";
-        training_result.scenario_name = scenario_name;
+        training_result.name = scenario_name;
+        // TODO update category here...
+        training_result.name = category;
 
-        out_file << training_result.scenario_name << ", ";
+        out_file << training_result.name << ", ";
         out_file << training_result.trial << ", ";
         out_file << training_result.dataset_size << ", ";
         out_file << training_result.correct<< ", ";
@@ -188,30 +197,49 @@ void MnistExperiment::runMnistNetwork(int trial,
         out_file << overfit << std::endl;
 
         writeTrainingResult(training_result, scenario_name + ".txt");
+        }
+
+
     }
 }
 
-std::vector<Scenario> MnistExperiment::getScenarios(int epoch_count) {
+std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int epoch_count) {
+
+    std::map<std::string, std::vector<Scenario>> scenario_map;
 
     Scenario s1("NO-DROPOUT");
+    std::string no_key = "NO";
+    scenario_map[no_key].push_back(s1);
 
     auto convex_fn  = [](int epoch) {return epoch * epoch;};
     auto concave_fn = [](int epoch) {return sqrt(epoch);};
     auto linear_fn  = [](int epoch) {return epoch;};
 
+    std::string constant_key = "CONSTANT";
     Scenario s2("C0.5", epoch_count, 0.5f);
     Scenario s3("C0.7", epoch_count, 0.7f);
     Scenario s4("C0.8", epoch_count, 0.8f);
     Scenario s5("C0.9", epoch_count, 0.9f);
+    scenario_map[constant_key].push_back(s2);
+    scenario_map[constant_key].push_back(s3);
+    scenario_map[constant_key].push_back(s4);
+    scenario_map[constant_key].push_back(s5);
 
+    std::string increasing_key = "INC";
     Scenario s6("L055-095", epoch_count, 0.55f, 0.95f, linear_fn);
-
     Scenario s7("Concave055-095", epoch_count, 0.55f, 0.95f, concave_fn);
     Scenario s8("Convex0.55-095", epoch_count, 0.55f, 0.95f, convex_fn);
+    scenario_map[increasing_key].push_back(s6);
+    scenario_map[increasing_key].push_back(s7);
+    scenario_map[increasing_key].push_back(s8);
 
+    std::string decreasing_key = "DEC";
     Scenario s9("Concave095-055", epoch_count, 0.95f, 0.55f, concave_fn);
     Scenario s10("Convex0.95-055", epoch_count, 0.95f, 0.55f, convex_fn);
+    scenario_map[decreasing_key].push_back(s9);
+    scenario_map[decreasing_key].push_back(s10);
 
+    std::string half_key = "DEC";
     Scenario s11("Concave055-095", epoch_count, epoch_count
                  /2, 0.55f, 0.95f, concave_fn);
     Scenario s12("Convex0.55-095", epoch_count, epoch_count/2, 0.55f, 0.95f, convex_fn);
@@ -219,10 +247,13 @@ std::vector<Scenario> MnistExperiment::getScenarios(int epoch_count) {
     Scenario s13("Concave095-055", epoch_count, epoch_count/2, 0.95f, 0.55f, concave_fn);
     Scenario s14("Convex0.95-055", epoch_count, epoch_count/2, 0.95f, 0.55f, convex_fn);
 
-    std::vector<Scenario> scenarios = {s1, s2, s4, s7, s8, s9, s10,
-                                              s11, s12, s13, s14};
-    /* std::vector<Scenario> scenarios = {s1, s2, s3, s4, s5, s6, s7, s8}; */
-    return scenarios;
+
+    scenario_map[half_key].push_back(s11);
+    scenario_map[half_key].push_back(s12);
+    scenario_map[half_key].push_back(s13);
+    scenario_map[half_key].push_back(s14);
+
+    return scenario_map;
 }
 
 NetworkConfig MnistExperiment::getConfig() {

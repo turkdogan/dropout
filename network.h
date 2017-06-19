@@ -11,6 +11,9 @@
 #include "scenario.h"
 
 struct NetworkConfig {
+    // in case of dropout
+    Scenario scenario;
+
     float learning_rate = 0.001f;
     float momentum = 0.9f;
 
@@ -44,16 +47,15 @@ struct TrainingResult {
     int correct;
     int trial;
 
-    std::string scenario_name;
+    std::string name;
+    std::string category;
 };
 
 
 class Network {
 
 public:
-    Network(
-        Scenario& scenario,
-        NetworkConfig& config);
+    Network(NetworkConfig& config);
 
     ~Network();
 
@@ -90,47 +92,7 @@ private:
     Layer **layers;
     int m_layer_count;
 
-    Scenario m_scenario;
     NetworkConfig m_config;
-
 };
-
-static void writeTrainingResult(TrainingResult& scenario_result, std::string file_name) {
-    std::ofstream out_file;
-    out_file.open("E_" + file_name);
-
-    for (double error : scenario_result.errors) {
-        out_file << error << std::endl;
-    }
-    out_file.close();
-
-    out_file.open("V_" + file_name);
-
-    for (double error : scenario_result.validation_errors) {
-        out_file << error << std::endl;
-    }
-    out_file.close();
-
-    float overfit = 0.0f;
-
-    for (int it = 0; it < scenario_result.errors.size(); it++) {
-        overfit += (-scenario_result.errors[it] + scenario_result.validation_errors[it]);
-    }
-    out_file.open("A_" + file_name);
-    out_file << scenario_result.scenario_name << ", ";
-    out_file << scenario_result.trial << ", ";
-    out_file << scenario_result.dataset_size << ", ";
-    out_file << scenario_result.correct<< ", ";
-    out_file << overfit << std::endl;
-    out_file.close();
-
-    // first laye weights only, not all scenario_result.weights...
-    for (int i = 0; i < 1; i++) {
-        std::ofstream w_out_file;
-        w_out_file.open("W" + std::to_string(i) + "_" + file_name);
-        w_out_file << scenario_result.weights[i];
-        w_out_file.close();
-    }
-}
 
 #endif

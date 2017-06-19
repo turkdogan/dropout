@@ -2,6 +2,7 @@
 #define MNIST_DROPOUT_EXPERIMENT_H
 
 #include <vector>
+#include <map>
 
 #include "../experiment.h"
 #include "../network.h"
@@ -34,7 +35,7 @@ private:
 
     NetworkConfig getConfig();
 
-	std::vector<Scenario> getScenarios(int epoch_count);
+    std::map<std::string, std::vector<Scenario>> getScenarios(int epoch_count);
 };
 
 #endif

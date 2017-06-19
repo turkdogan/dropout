@@ -18,9 +18,9 @@ void IrisExperiment::run() {
     config.addLayerConfig(150, 40, Activation::Sigmoid, true);
     config.addLayerConfig(40, 3, Activation::Softmax, false);
 
-	Scenario scenario("C08", config.epoch_count, 0.8f);
+    config.scenario = Scenario("C08", config.epoch_count, 0.8f);
 
-    Network network(scenario, config);
+    Network network(config);
 
 	Dataset dataset = readIris();
 	TrainingResult scenario_result = network.trainNetwork(

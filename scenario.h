@@ -4,25 +4,11 @@
 #include <vector>
 #include <functional>
 
-struct DropoutScenario {
-    bool dont_drop = false;
-
-    std::vector<double> dropouts;
-
-    double averageDropout() {
-        double sum = 0.0f;
-        for (double value : dropouts) {
-            sum += value;
-        }
-        return sum / dropouts.size();
-    }
-
-    std::string name;
-};
-
 class Scenario {
 
 public:
+    Scenario();
+
     // no dropout
     Scenario(std::string name);
 
@@ -43,6 +29,8 @@ public:
              double keep_begin_rate,
              double keep_end_rate,
              std::function<double(int)>);
+
+    void setCategory(std::string category);
 
     bool isEnabled() const;
 

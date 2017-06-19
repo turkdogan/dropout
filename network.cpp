@@ -5,10 +5,8 @@
 #include "utils.h"
 
 Network::Network(
-	Scenario& scenario,
 	NetworkConfig& config)
-	: m_scenario(scenario),
-	  m_config(config)
+	: m_config(config)
 {
 	assert(config.layer_configs.size() > 1);
 
@@ -16,10 +14,10 @@ Network::Network(
 	layers = new Layer*[m_layer_count];
 	for (int i = 0; i < m_layer_count; i++) {
 		LayerConfig& layer_config = config.layer_configs[i];
-        if (!scenario.isEnabled() || !layer_config.is_dropout) {
+        if (!layer_config.is_dropout || !config.scenario.isEnabled()) {
 			layers[i] = new Layer(layer_config);
 		} else {
-			layers[i] = new DropoutLayer(layer_config, scenario);
+			layers[i] = new DropoutLayer(layer_config, config.scenario);
 		}
 	}
 }

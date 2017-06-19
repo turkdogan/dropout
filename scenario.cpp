@@ -2,6 +2,10 @@
 
 #include <cassert>
 
+Scenario::Scenario()
+    :m_name ("foo") {
+}
+
 Scenario::Scenario(std::string name)
     :m_name (name) {
 }
