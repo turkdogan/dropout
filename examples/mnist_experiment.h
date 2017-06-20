@@ -30,8 +30,7 @@ private:
                          Eigen::MatrixXf& validation_input,
                          Eigen::MatrixXf& validation_output,
                          Eigen::MatrixXf& test_input,
-                         Eigen::MatrixXf& test_output,
-                         std::ofstream& out_file);
+                         Eigen::MatrixXf& test_output);
 
     NetworkConfig getConfig();
 

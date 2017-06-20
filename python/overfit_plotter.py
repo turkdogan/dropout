@@ -6,120 +6,76 @@ from random import randint
 
 import os, fnmatch
 
-def plot_batch_overfit(dataset):
-
+def plot_batch_overfit(dataset, scenario_index_map):
+    print(scenario_index_map)
     fit = plt.figure();
-    # fit.set_size_inches(8, 10)
+    plt.xticks([0, 400, 800, 1000, 2000, 3000, 400, 5000, 8000, 10000])
 
     plot_list = []
-
-    # ax1.plot(x, y, color = (0, i / 20.0, 0, 1)
-
-    colors = ["r", "c", "y", "b", "g", "m", "k", "violet", "lime", "dimgray", "yellow"]
+    colors = ["r", "c", "y", "b", "g", "m", "k", "violet", "lime", "dimgray", "yellow", "tan", "skyblue", "seashell", "seagreen"]
     scenarios = []
+    iterations = 120.0
 
-    # axes = plt.gca()
-    # axes.set_xlim([0, 10000])
+    for data in dataset:
+        label = data['size']
+        value = data['overfit'] / iterations
+        scenario = data['name'].split('_')[1]
+        if scenario not in scenarios:
+            plott, = plt.plot(label, value, "o", markersize=15, color=colors[scenario_index_map[scenario]], label=scenario)
+            scenarios.append(scenario)
+        else:
+            plott, = plt.plot(label, value, "o", markersize=15, color=colors[scenario_index_map[scenario]])
 
-    # plt.xticks([0, 500, 1000, 2000, 3000, 5000, 10000])
-    # plt.yticks([v/100.0 for v in range(120) if v % 4 == 0])
-
-    first_time = True
-    for size in dataset:
-        index=0
-        for data in dataset[size]:
-            plott, = plt.plot([data['size']], [data['overfit']/120.0], "x", color=colors[index])
-            index=index+1
-            if first_time:
-                scenario_name = data['name'].split("_")
-                scenario = scenario_name[2]
-                if len(scenario_name) > 4:
-                    scenario = scenario + "-" + scenario_name[4]
-                    if "CONSTANT" not in scenario:
-                        scenario = scenario + "-" + scenario_name[5]
-                    if scenario.endswith(".txt"):
-                        scenario = scenario[:-4]
-                else:
-                    scenario = scenario + "-" + scenario_name[3][:-4]
-                scenarios.append(scenario)
-                # print(scenario)
-        first_time = False
-
-    plt.ylabel("Average overfit per epoch")
+    category = dataset[0]['category']
+    # plt.ylabel("Average overfit per epoch for all categories")
+    plt.ylabel("Average overfit per epoch for category: " + category)
     plt.xlabel("Dataset size")
-    # print([dataset[a]['name'].split("_")[2] for a in range(len(dataset))])
-    plt.legend(scenarios)
+    plt.legend(loc=0)
+    # plt.legend(scenarios)
     plt.show();
 
-def plotOverfit(dataset):
-
-    plot_list = []
-
-    # ax1.plot(x, y, color = (0, i / 20.0, 0, 1)
-
-    colors = ["g", "c", "y", "b", "r", "m", "k", "violet"]
-    scenarios = []
-
-    # axes = plt.gca()
-    # axes.set_xlim([0, 10000])
-
-    # plt.xticks([0, 500, 1000, 2000, 3000, 5000, 10000])
-    # plt.yticks([v/100.0 for v in range(120) if v % 4 == 0])
-
-    first_time = True
-    for size in dataset:
-        index=0
-        fit = plt.figure();
-        fit.set_size_inches(12, 4)
-        for data in dataset[size]:
-            plott, = plt.plot([data['size']], [data['overfit']/120.0], "x", color=colors[index])
-            plt.ylabel("Average overfit per epoch")
-            plt.xlabel("Dataset size")
-
-            # plott, = plt.plot([data['size']], [10000-data['correct']], "x", color=colors[index])
-            # plt.ylabel("Misclassified sample size of 10000")
-            # plt.xlabel("Dataset size")
-            index=index+1
-            if first_time:
-                scenario_name = data['name'].split("_")
-                scenario = scenario_name[2]
-                if len(scenario_name) > 4:
-                    scenario = scenario + "-" + scenario_name[4]
-                    if "CONSTANT" not in scenario:
-                        scenario = scenario + "-" + scenario_name[5]
-                    if scenario.endswith(".txt"):
-                        scenario = scenario[:-4]
-                else:
-                    scenario = scenario + "-" + scenario_name[3][:-4]
-                scenarios.append(scenario)
-                # print(scenario)
-        plt.legend(scenarios)
-        plt.savefig("output/" + str(size) +"-overfit.png")
-        # plt.savefig(str(size) +"-misclassified.png")
-        first_time = False
-
-    # plt.ylabel("Average overfit per epoch")
-    # plt.xlabel("Dataset size")
-    # print([dataset[a]['name'].split("_")[2] for a in range(len(dataset))])
-    # plt.legend(scenarios)
-    # plt.show();
-    # plt.savefig(name)
-
-def plotOverfits(file_name):
-    f = open(file_name)
-    lines = f.readlines();
+def parse_overfit_data(directory):
     dataset = {}
-    for line in lines:
-        line_data = line.split(",")
-        size = int(line_data[2])
+    file_names = fnmatch.filter(os.listdir(directory), "A_*")
+    for file_name in file_names:
+        f = open(directory+ "/" + file_name, 'r')
+        line = f.readline().rstrip('\n')
+        content = line.split(',')
+        category = content[1]
+        if category not in dataset:
+            dataset[category] = []
 
-        if size not in dataset:
-            dataset[size] = []
-        dataset[size].append({"name": line_data[0],
-            "trial": int(line_data[1]),
-            "size": int(line_data[2]),
-            "correct": int(line_data[3]),
-            "overfit": float(line_data[4])})
-    plot_batch_overfit(dataset)
+        dataset[category].append({
+            "name": content[0],
+            "category": content[1],
+            "trial": int(content[2]),
+            "size": int(content[3]),
+            "correct": int(content[4]),
+            "overfit": float(content[5])})
 
-plotOverfits("input/mnist.txt")
+        f.close()
+
+    return dataset
+
+
+def plot_overfits():
+    directory = 'input'
+    overfit_data = parse_overfit_data(directory)
+    scenarios = {}
+
+    index = 0
+    for category in overfit_data:
+        for experiment in overfit_data[category]:
+            scenario = experiment['name'].split('_')[1]
+            if scenario not in scenarios:
+                scenarios[scenario] = index
+                index = index + 1
+
+    batch_overfit_data = []
+    for category in overfit_data:
+        batch_overfit_data.extend(overfit_data[category])
+        plot_batch_overfit(overfit_data[category], scenarios)
+    # plot_batch_overfit(batch_overfit_data, scenarios)
+
+if __name__ == '__main__':
+    plot_overfits()

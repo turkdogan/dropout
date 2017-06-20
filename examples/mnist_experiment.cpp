@@ -9,9 +9,6 @@
 void MnistExperiment::run() {
     std::cout << "Mnist Dropout Experiment Run..." << std::endl;
 
-    std::ofstream out_file;
-    out_file.open("mnist.txt");
-
     int total_size = 60000;
     int validation_size = 100;
     int validation_begin = total_size - validation_size;
@@ -27,7 +24,7 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {400, 1000};
+    int dataset_sizes[] = {400, 800, 1000, 2000, 5000, 10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runMnistNetwork(trial,
@@ -39,11 +36,9 @@ void MnistExperiment::run() {
                             validation_input,
                             validation_output,
                             test_input,
-                            test_output,
-                            out_file);
+                            test_output);
         }
     }
-    out_file.close();
 }
 
 int MnistExperiment::reverseInt(int i)
@@ -141,8 +136,7 @@ void MnistExperiment::runMnistNetwork(int trial,
                      Eigen::MatrixXf& validation_input,
                      Eigen::MatrixXf& validation_output,
                      Eigen::MatrixXf& test_input,
-                     Eigen::MatrixXf& test_output,
-                     std::ofstream& out_file) {
+                     Eigen::MatrixXf& test_output) {
 
     NetworkConfig config = getConfig();
 
@@ -175,18 +169,12 @@ void MnistExperiment::runMnistNetwork(int trial,
         training_result.dataset_size = dataset_size;
         training_result.correct = correct;
         std::string scenario_name =
-            "MNIST_" +
             std::to_string(dataset_size) + "_" +
             /* std::to_string(trial) + "_" + */
-            scenario.name() + ".txt";
+            scenario.name();
         training_result.name = scenario_name;
         // TODO update category here...
-        training_result.name = category;
-
-        out_file << training_result.name << ", ";
-        out_file << training_result.trial << ", ";
-        out_file << training_result.dataset_size << ", ";
-        out_file << training_result.correct<< ", ";
+        training_result.category = category;
 
         float overfit = 0.0f;
 
@@ -194,12 +182,8 @@ void MnistExperiment::runMnistNetwork(int trial,
             float iter_diff = (-training_result.errors[it] + training_result.validation_errors[it]);
             overfit += iter_diff / (training_result.errors[it] + training_result.validation_errors[it]);
         }
-        out_file << overfit << std::endl;
-
         writeTrainingResult(training_result, scenario_name + ".txt");
         }
-
-
     }
 }
 
@@ -227,6 +211,7 @@ std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int e
 
     std::string increasing_key = "INC";
     Scenario s6("L055-095", epoch_count, 0.55f, 0.95f, linear_fn);
+    Scenario s6_dec("L095-055", epoch_count, 0.95f, 0.55f, linear_fn);
     Scenario s7("Concave055-095", epoch_count, 0.55f, 0.95f, concave_fn);
     Scenario s8("Convex0.55-095", epoch_count, 0.55f, 0.95f, convex_fn);
     scenario_map[increasing_key].push_back(s6);
@@ -238,15 +223,15 @@ std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int e
     Scenario s10("Convex0.95-055", epoch_count, 0.95f, 0.55f, convex_fn);
     scenario_map[decreasing_key].push_back(s9);
     scenario_map[decreasing_key].push_back(s10);
+    scenario_map[decreasing_key].push_back(s6_dec);
 
-    std::string half_key = "DEC";
-    Scenario s11("Concave055-095", epoch_count, epoch_count
-                 /2, 0.55f, 0.95f, concave_fn);
-    Scenario s12("Convex0.55-095", epoch_count, epoch_count/2, 0.55f, 0.95f, convex_fn);
+    std::string half_key = "HALF";
+    Scenario s11("HConcave055-095", epoch_count, epoch_count
+                 /4, 0.55f, 0.95f, concave_fn);
+    Scenario s12("HConvex0.55-095", epoch_count, epoch_count/4, 0.55f, 0.95f, convex_fn);
 
-    Scenario s13("Concave095-055", epoch_count, epoch_count/2, 0.95f, 0.55f, concave_fn);
-    Scenario s14("Convex0.95-055", epoch_count, epoch_count/2, 0.95f, 0.55f, convex_fn);
-
+    Scenario s13("HConcave095-055", epoch_count, epoch_count/4, 0.95f, 0.55f, concave_fn);
+    Scenario s14("HConvex0.95-055", epoch_count, epoch_count/4, 0.95f, 0.55f, convex_fn);
 
     scenario_map[half_key].push_back(s11);
     scenario_map[half_key].push_back(s12);
