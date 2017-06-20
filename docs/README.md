@@ -1,7 +1,7 @@
 TODO: this document is not complete yet
 
 # Introduction
-In this study, it has bee investigated the relationship between dropout and the overfit for MNIST dataset. Dropout is an effective regulatization technique to prevent or at least reduce the overfit in neural network systems.
+In this study, it has been investigated the relationship between dropout and the overfit for MNIST dataset. Dropout is an effective regulatization technique to prevent or at least reduce the overfit in neural network systems.
 
 Here total 10 experiments have been carried out to calculate the effect of dropout for different kind of dropout implementations. The following 10 experiments were performed:
 - No dropout 
