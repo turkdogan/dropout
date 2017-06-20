@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "examples/mnist_experiment.h"
+#include "examples/cifar_experiment.h"
 #include "examples/iris_experiment.h"
 
 
@@ -71,8 +72,11 @@ int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    MnistExperiment mnist_experiment;
-    mnist_experiment.run();
+    // MnistExperiment mnist_experiment;
+    // mnist_experiment.run();
+
+    CifarExperiment cifar_experiment;
+    cifar_experiment.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;

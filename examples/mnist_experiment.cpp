@@ -148,41 +148,35 @@ void MnistExperiment::runMnistNetwork(int trial,
 
         for (const Scenario& scenario : scenarios) {
 
-        std::cout << "Running: " << scenario.name()<< std::endl;
-        srand(trial + 55);
+            std::cout << "Running: " << scenario.name()<< std::endl;
+            srand(trial + 55);
 
-        // read data from scratch
-        Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
-        Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
+            // read data from scratch
+            Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
+            Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
 
-        config.scenario = scenario;
-        Network network(config);
-        TrainingResult training_result = network.trainNetwork(
-            train_input, train_output,
-            validation_input, validation_output,
-            false);
+            config.scenario = scenario;
+            Network network(config);
+            TrainingResult training_result = network.trainNetwork(
+                train_input, train_output,
+                validation_input, validation_output,
+                false);
 
-        int correct = network.test(test_input, test_output);
-        training_result.count = 10000;
-        training_result.correct = correct;
-        training_result.trial = trial;
-        training_result.dataset_size = dataset_size;
-        training_result.correct = correct;
-        std::string scenario_name =
-            std::to_string(dataset_size) + "_" +
-            /* std::to_string(trial) + "_" + */
-            scenario.name();
-        training_result.name = scenario_name;
-        // TODO update category here...
-        training_result.category = category;
+            int correct = network.test(test_input, test_output);
+            training_result.count = 10000;
+            training_result.correct = correct;
+            training_result.trial = trial;
+            training_result.dataset_size = dataset_size;
+            training_result.correct = correct;
+            std::string scenario_name =
+                std::to_string(dataset_size) + "_" +
+                /* std::to_string(trial) + "_" + */
+                scenario.name();
+            training_result.name = scenario_name;
+            // TODO update category here...
+            training_result.category = category;
 
-        float overfit = 0.0f;
-
-        for (int it = 0; it < training_result.errors.size(); it++) {
-            float iter_diff = (-training_result.errors[it] + training_result.validation_errors[it]);
-            overfit += iter_diff / (training_result.errors[it] + training_result.validation_errors[it]);
-        }
-        writeTrainingResult(training_result, scenario_name + ".txt");
+            writeTrainingResult(training_result, scenario_name + ".txt");
         }
     }
 }
