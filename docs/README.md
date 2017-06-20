@@ -3,7 +3,7 @@ TODO: this document is not complete yet
 # Introduction
 In this study, it has been investigated the relationship between dropout and the overfit for MNIST dataset. Dropout is an effective regulatization technique to prevent or at least reduce the overfit in neural network systems.
 
-Here total 10 experiments have been carried out to calculate the effect of dropout for different kind of dropout implementations. The following 10 experiments were performed:
+Here total 12 experiments have been carried out to calculate the effect of dropout for different kind of dropout implementations. The following 12 experiments were performed:
 - No dropout 
 - Dropout with constant value (0.5, 0.7, 0.9 keep rates respectively)
 - Linear increasing keep rate with formula keep_rate = param * iteration
@@ -20,7 +20,16 @@ Here total 10 experiments have been carried out to calculate the effect of dropo
 To see the overfit clearly, following MNIST dataset sizes have been examined: 400, 800, 1000, 5000, 10000
 
 # Experiments
-All the scenarios run for the all the dataset sizes and the overfit value for each run is stored in a file to plot and see the calculate value.
+All the scenarios run for the all the dataset sizes and the overfit value for each run is stored in a file to plot and to see the calculate ovefit data information.
+
+Each stored file holds the overfit value which is calculated as follows:
+```
+ overfit = 0
+ for each iteration
+    validation_err = calc_validation_error
+    training_err = calc_training_error
+    overfit += (training_err - validation_err) / (training_err + validation_err)
+```
 
 And at each iteration validation and training error value is calculated.
 
