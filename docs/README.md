@@ -52,15 +52,15 @@ The following pictures give overfit values for each "category". The experiments 
 - NO: No dropout
 
 
-![Constant dropout MNIST](overfit_400_10000.png?raw=true "Constant category")
+![Constant dropout MNIST](overfit_constant_400_10000.png?raw=true "Constant category")
 
-![Decreasing dropout MNIST](overfit_400_10000.png?raw=true "Decreasing category")
+![Decreasing dropout MNIST](overfit_dec_400_10000.png?raw=true "Decreasing category")
 
-![Increasing dropout MNIST](overfit_400_10000.png?raw=true "Increasing category")
+![Increasing dropout MNIST](overfit_inc_400_10000.png?raw=true "Increasing category")
 
-![Half dropout MNIST](overfit_400_10000.png?raw=true "Half category")
+![Half dropout MNIST](overfit_half_400_10000.png?raw=true "Half category")
 
-![No dropout MNIST](overfit_400_10000.png?raw=true "Constant category")
+![No dropout MNIST](overfit_no_400_10000.png?raw=true "Constant category")
 
 # References
 MNIST Datset: [LeCun et al., 1998a]
