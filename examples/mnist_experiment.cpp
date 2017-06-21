@@ -16,6 +16,8 @@ void MnistExperiment::run() {
     Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
     Eigen::MatrixXf output = readMnistOutput("mnist/train-labels.idx1-ubyte", total_size);
 
+    shuffleMatrixPair(input, output);
+
     Eigen::MatrixXf validation_input =
         input.block(validation_begin, 0, validation_size, input.cols());
     Eigen::MatrixXf validation_output =

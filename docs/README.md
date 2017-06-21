@@ -38,20 +38,20 @@ And at each iteration validation and training error value is calculated.
 The legend labels are:
 - NO-DROPOUT: Do not apply dropout
 - C05: Constant keeping rate 0.5 for all the iterations
-- L055-0.95: Increasing linear dropout starting with starting keeping rate from 0.55 to 0.95
-- L055-0.95: Increasing linear dropout starting with starting keeping rate from 0.55 to 0.95
-- Concave055-0.95: Increasing concave dropout starting with starting keeping rate from 0.55 to 0.95
-- Convex055-0.95: Increasing convex dropout starting with starting keeping rate from 0.55 to 0.95
-- Concave095-0.55: Decreasing concave dropout starting with starting keeping rate from 0.95 to 0.55
-- Convex05-0.55: Decreasing convex dropout starting with starting keeping rate from 0.95 to 0.55
-- HConcave055-0.95: No dropout for the first 25% iterations. Increasing concave dropout starting with starting keeping rate from 0.55 to 0.95
-- HConvex055-0.95: No dropout for the first %25 iterations. Increasing convex dropout starting with starting keeping rate from 0.55 to 0.95
-- HConcave095-0.55: No dropout for the first 25% iterations. Decreasing concave dropout starting with starting keeping rate from 0.95 to 0.55
-- HConvex05-0.55: No dropout for the first 25% iterations. Decreasing convex dropout starting with starting keeping rate from 0.95 to 0.55
+- L055-0.95: Increasing linear dropout starting with keeping rate from 0.55 to 0.95
+- L055-0.95: Increasing linear dropout starting with keeping rate from 0.55 to 0.95
+- Concave055-0.95: Increasing concave dropout starting with keeping rate from 0.55 to 0.95
+- Convex055-0.95: Increasing convex dropout starting with keeping rate from 0.55 to 0.95
+- Concave095-0.55: Decreasing concave dropout starting with keeping rate from 0.95 to 0.55
+- Convex05-0.55: Decreasing convex dropout starting with keeping rate from 0.95 to 0.55
+- HConcave055-0.95: No dropout for the first 25% iterations. Increasing concave dropout starting with keeping rate from 0.55 to 0.95
+- HConvex055-0.95: No dropout for the first %25 iterations. Increasing convex dropout starting with keeping rate from 0.55 to 0.95
+- HConcave095-0.55: No dropout for the first 25% iterations. Decreasing concave dropout starting with keeping rate from 0.95 to 0.55
+- HConvex05-0.55: No dropout for the first 25% iterations. Decreasing convex dropout starting with keeping rate from 0.95 to 0.55
 
 ![MNIST experiments](overfit_400_10000.png?raw=true "Mnist experiments")
 
-It has been ovserved that, "no-dropout" gives the most performance in terms of overfit with the highest overfit value for all the dataset sizes. Interestingly the constant dropout with the 0.5 gives best performance, but for the dataset size 10000, the lowest overfit value came from "convex-increasing" scenario. For further details, those experiments should be run for more dataset sizes such as 20k to 60k.
+It has been ovserved that, "no-dropout" gives the worst performance in terms of overfit with the highest overfit value for all the dataset sizes. Interestingly the constant dropout with the 0.5 gives best performance with the lowest overfit values for dataset size 400, 800, 1000 and 5000 respectively. But for the dataset size 10000, the lowest overfit value came from "convex-increasing" scenario. For further details, those experiments should be run for more dataset sizes such as 20k to 60k with multiple seeds.
 
 The following pictures give overfit values for each "category". The experiments are also divided into following "categories":
 - DEC: Decreasing
@@ -59,7 +59,6 @@ The following pictures give overfit values for each "category". The experiments 
 - CONSTANT: Constant
 - HALF: No dropout for the half of the iterations, then apply dropout
 - NO: No dropout
-
 
 ![Constant dropout MNIST](overfit_constant_400_10000.png?raw=true "Constant category")
 

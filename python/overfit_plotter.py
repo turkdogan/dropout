@@ -27,8 +27,8 @@ def plot_batch_overfit(dataset, scenario_index_map):
             plott, = plt.plot(label, value, "o", markersize=15, color=colors[scenario_index_map[scenario]])
 
     category = dataset[0]['category']
-    # plt.ylabel("Average overfit per epoch for all categories")
-    plt.ylabel("Average overfit per epoch for category: " + category)
+    plt.ylabel("Average overfit per epoch for all categories")
+    # plt.ylabel("Average overfit per epoch for category: " + category)
     plt.xlabel("Dataset size")
     plt.legend(loc=0)
     # plt.legend(scenarios)
@@ -74,8 +74,8 @@ def plot_overfits():
     batch_overfit_data = []
     for category in overfit_data:
         batch_overfit_data.extend(overfit_data[category])
-        plot_batch_overfit(overfit_data[category], scenarios)
-    # plot_batch_overfit(batch_overfit_data, scenarios)
+        # plot_batch_overfit(overfit_data[category], scenarios)
+    plot_batch_overfit(batch_overfit_data, scenarios)
 
 if __name__ == '__main__':
     plot_overfits()
