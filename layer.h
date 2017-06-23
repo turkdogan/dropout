@@ -30,9 +30,11 @@ public:
         } else if (layerConfig.activation == Activation::Sigmoid) {
             W = xavierMatrix(layerConfig.rows, layerConfig.cols, false);
         } else {
-            W = uniformMatrix(layerConfig.rows, layerConfig.cols, -0.05, 0.05);
+            int r = layerConfig.rows;
+            int c = layerConfig.cols;
+            // http://cs231n.github.io/neural-networks-2/
+            W = Eigen::MatrixXf::Random(r, c) * sqrt(2/(r * c));
         }
-
 		W_change = Eigen::MatrixXf::Zero(W.rows(), W.cols());
 		B = Eigen::VectorXf::Ones(W.cols());
         B_change = 0.0f;

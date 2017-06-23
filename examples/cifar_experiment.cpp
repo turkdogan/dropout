@@ -29,7 +29,7 @@ void CifarExperiment::run() {
 	Eigen::MatrixXf test_label(total_size, 10);
 	readCifarInput("cifar-10-batches-bin/data_batch_1.bin", test_input, test_label, total_size);
 
-    int dataset_sizes[] = {1000};
+    int dataset_sizes[] = {5000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runCifar(trial, dataset_size,
@@ -155,9 +155,9 @@ std::map<std::string, std::vector<Scenario>> CifarExperiment::getScenarios(int e
     Scenario s4("C0.8", epoch_count, 0.8f);
     Scenario s5("C0.9", epoch_count, 0.9f);
     scenario_map[constant_key].push_back(s2);
-    scenario_map[constant_key].push_back(s3);
-    scenario_map[constant_key].push_back(s4);
-    scenario_map[constant_key].push_back(s5);
+    // scenario_map[constant_key].push_back(s3);
+    // scenario_map[constant_key].push_back(s4);
+    // scenario_map[constant_key].push_back(s5);
 
     std::string increasing_key = "INC";
     Scenario s6("L055-095", epoch_count, 0.55f, 0.95f, linear_fn);
@@ -165,15 +165,15 @@ std::map<std::string, std::vector<Scenario>> CifarExperiment::getScenarios(int e
     Scenario s7("Concave055-095", epoch_count, 0.55f, 0.95f, concave_fn);
     Scenario s8("Convex0.55-095", epoch_count, 0.55f, 0.95f, convex_fn);
     scenario_map[increasing_key].push_back(s6);
-    scenario_map[increasing_key].push_back(s7);
-    scenario_map[increasing_key].push_back(s8);
+    // scenario_map[increasing_key].push_back(s7);
+    // scenario_map[increasing_key].push_back(s8);
 
     std::string decreasing_key = "DEC";
     Scenario s9("Concave095-055", epoch_count, 0.95f, 0.55f, concave_fn);
     Scenario s10("Convex0.95-055", epoch_count, 0.95f, 0.55f, convex_fn);
-    scenario_map[decreasing_key].push_back(s9);
-    scenario_map[decreasing_key].push_back(s10);
-    scenario_map[decreasing_key].push_back(s6_dec);
+    // scenario_map[decreasing_key].push_back(s9);
+    // scenario_map[decreasing_key].push_back(s10);
+    // scenario_map[decreasing_key].push_back(s6_dec);
 
     std::string half_key = "HALF";
     Scenario s11("HConcave055-095", epoch_count, epoch_count
@@ -183,10 +183,10 @@ std::map<std::string, std::vector<Scenario>> CifarExperiment::getScenarios(int e
     Scenario s13("HConcave095-055", epoch_count, epoch_count/4, 0.95f, 0.55f, concave_fn);
     Scenario s14("HConvex0.95-055", epoch_count, epoch_count/4, 0.95f, 0.55f, convex_fn);
 
-    scenario_map[half_key].push_back(s11);
-    scenario_map[half_key].push_back(s12);
-    scenario_map[half_key].push_back(s13);
-    scenario_map[half_key].push_back(s14);
+    // scenario_map[half_key].push_back(s11);
+    // scenario_map[half_key].push_back(s12);
+    // scenario_map[half_key].push_back(s13);
+    // scenario_map[half_key].push_back(s14);
 
     return scenario_map;
 }
@@ -199,7 +199,7 @@ NetworkConfig CifarExperiment::getConfig() {
 	const int dim4 = 10;
 
 	NetworkConfig config;
-	config.epoch_count = 120;
+	config.epoch_count = 320;
 	config.report_each = 4;
 	config.batch_size = 100;
 	config.momentum = 0.9f;
