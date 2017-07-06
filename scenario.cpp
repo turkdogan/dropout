@@ -1,6 +1,8 @@
 #include "scenario.h"
 
 #include <cassert>
+#include <string>
+#include <iostream>
 
 Scenario::Scenario()
     :m_name ("foo") {
@@ -97,4 +99,12 @@ int Scenario::size() const {
 
 std::string Scenario::name() const {
     return m_name;
+}
+
+void Scenario::print() const {
+    std::cout << m_name << std::endl;
+    for (double dropout_ratio : m_dropouts) {
+        std::cout << dropout_ratio << " ";
+    }
+    std::cout << std::endl;
 }

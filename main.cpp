@@ -6,77 +6,32 @@
 #include <chrono>
 
 #include "examples/mnist_experiment.h"
+#include "examples/mnist_dropgrad_experiment.h"
 #include "examples/cifar_experiment.h"
 #include "examples/iris_experiment.h"
 
+void printScenario() {
+    Scenario s3("C0.7", 10, 0.7f);
 
-void testConcaveDecScenario() {
-    float dropout_begin = 1.0;
-    float dropout_end = 0.5;
-    int epoch = 100;
-
-    auto fn = [](int epoch){return (double)sqrt(epoch);};
-    Scenario scenario("C", epoch, dropout_begin, dropout_end, fn);
-
-    for (int i = 0; i < epoch; i++) {
-        // std::cout << fn(i) << ", ";
-        std::cout << scenario.getKeepRate(i) << ", ";
+    for (int i = 0; i < s3.size(); i++) {
+        std::cout << s3.getKeepRate(i) << " ";
     }
-    std::cout << std::endl;
-}
-
-void testHalfConcaveDecScenario() {
-
-    float dropout_begin = 1.0f;
-    float dropout_end = .5f;
-    int epoch = 10;
-
-    // auto fn = [](int epoch){return epoch * epoch;};
-    auto fn = [](int epoch){return sqrt(epoch);};
-    Scenario scenario("HCD", epoch, epoch/2, dropout_begin, dropout_end, fn);
-
-    for (int i = 0; i < epoch; i++) {
-        std::cout << scenario.getKeepRate(i) << ", ";
-    }
-    std::cout << std::endl;
-}
-
-void testHalfConvexScenario() {
-    auto convex_fn = [](float x) { return x * x; };
-
-    Scenario scenario("foo", 10, 5, 0.5, 1.0, convex_fn);
-    for (int i = 0; i < 10; i++) {
-        std::cout << scenario.getKeepRate(i) << ", ";
-    }
-    std::cout << std::endl;
-}
-
-void testHalfDecConvexScenario() {
-    auto convex_fn = [](float x) { return x * x; };
-
-    Scenario scenario("foo", 10, 5, 1.0, 0.5, convex_fn);
-    for (int i = 0; i < 10; i++) {
-        std::cout << scenario.getKeepRate(i) << ", ";
-    }
-    std::cout << std::endl;
-}
-
-void testScenarios() {
-    // testHalfConvexScenario();
-    // testHalfDecConvexScenario();
-    // testHalfConcaveDecScenario();
-    testConcaveDecScenario();
+    s3.print();
+    Scenario s4("C0.8", 10, 0.8f);
+    s4.print();
 }
 
 int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    // MnistExperiment mnist_experiment;
-    // mnist_experiment.run();
+    printScenario();
 
-    CifarExperiment cifar_experiment;
-    cifar_experiment.run();
+    MnistExperiment mnist_experiment;
+    mnist_experiment.run();
+
+    // CifarExperiment cifar_experiment;
+    // cifar_experiment.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;

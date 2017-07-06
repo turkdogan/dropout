@@ -12,8 +12,10 @@ void DropoutLayer::feedforward(bool testing) {
 }
 
 void DropoutLayer::backpropagate() {
-    Layer::backpropagate();
+    DZ = D.cwiseProduct(dactivation(Y));
     DZ = DZ.cwiseProduct(dropout_mask);
+    DW = X.transpose() * DZ;
+    DY = DZ * W.transpose();
 }
 
 /*

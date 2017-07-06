@@ -4,6 +4,8 @@
 #include "network.h"
 #include "utils.h"
 
+#include "dropgrad_layer.h"
+
 Network::Network(
 	NetworkConfig& config)
 	: m_config(config)
@@ -17,6 +19,7 @@ Network::Network(
         if (!layer_config.is_dropout || !config.scenario.isEnabled()) {
 			layers[i] = new Layer(layer_config);
 		} else {
+			// layers[i] = new DropgradLayer(layer_config);
 			layers[i] = new DropoutLayer(layer_config, config.scenario);
 		}
 	}

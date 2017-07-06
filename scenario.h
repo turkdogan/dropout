@@ -42,6 +42,8 @@ public:
 
     std::string name() const;
 
+    void print() const;
+
 private:
     std::vector<double> m_dropouts;
 
