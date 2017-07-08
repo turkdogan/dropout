@@ -16,12 +16,14 @@ Network::Network(
 	layers = new Layer*[m_layer_count];
 	for (int i = 0; i < m_layer_count; i++) {
 		LayerConfig& layer_config = config.layer_configs[i];
-        if (!layer_config.is_dropout || !config.scenario.isEnabled()) {
+
+        if (layer_config.is_dropout && config.scenario.isEnabled()) {
+            layers[i] = new DropoutLayer(layer_config, config.scenario);
+        } else if (layer_config.is_dropgrad) {
+            layers[i] = new DropgradLayer(layer_config);
+        } else {
 			layers[i] = new Layer(layer_config);
-		} else {
-			// layers[i] = new DropgradLayer(layer_config);
-			layers[i] = new DropoutLayer(layer_config, config.scenario);
-		}
+        }
 	}
 }
 

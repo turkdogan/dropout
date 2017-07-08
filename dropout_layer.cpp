@@ -13,8 +13,6 @@ void DropoutLayer::feedforward(bool testing) {
 
 void DropoutLayer::backpropagate() {
     auto dy = dactivation(Y);
-    auto mean = dy.mean();
-    std::cout << mean << " ";
     dy = dy.cwiseProduct(dropout_mask);
     DZ = D.cwiseProduct(dy);
     DW = X.transpose() * DZ;

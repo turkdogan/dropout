@@ -141,6 +141,29 @@ void MnistDropgradExperiment::runMnistNetwork(int trial,
                      Eigen::MatrixXf& test_output) {
 
     NetworkConfig config = getConfig();
+
+    Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
+    Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
+
+    Network network(config);
+    TrainingResult training_result = network.trainNetwork(
+        train_input, train_output,
+        validation_input, validation_output,
+        false);
+
+    int correct = network.test(test_input, test_output);
+    training_result.count = 10000;
+    training_result.correct = correct;
+    training_result.trial = trial;
+    training_result.dataset_size = dataset_size;
+    training_result.correct = correct;
+    std::string scenario_name =
+        std::to_string(dataset_size);
+    training_result.name = scenario_name;
+    // TODO update category here...
+    training_result.category = "DROPGRAD";
+
+    writeTrainingResult(training_result, scenario_name + ".txt");
 }
 
 NetworkConfig MnistDropgradExperiment::getConfig() {
@@ -156,10 +179,10 @@ NetworkConfig MnistDropgradExperiment::getConfig() {
     config.momentum = 0.9f;
     config.learning_rate = 0.002f;
 
-    config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
-    config.addLayerConfig(dim2, dim3, Activation::ReLU, true);
+    config.addLayerConfig(dim1, dim2, Activation::ReLU, false, true);
+    config.addLayerConfig(dim2, dim3, Activation::ReLU, false, true);
     /* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
-    config.addLayerConfig(dim3, dim4, Activation::Softmax, false);
+    config.addLayerConfig(dim3, dim4, Activation::Softmax, false, false);
 
     return config;
 }

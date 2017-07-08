@@ -23,7 +23,7 @@ int main() {
 
     foo();
 
-    MnistExperiment mnist_experiment;
+    MnistDropgradExperiment mnist_experiment;
     mnist_experiment.run();
 
     // CifarExperiment cifar_experiment;

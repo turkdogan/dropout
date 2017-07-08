@@ -24,12 +24,14 @@ struct NetworkConfig {
     void addLayerConfig(const int dim1,
                         const int dim2,
                         Activation activation,
-                        bool is_dropout = false) {
+                        bool is_dropout = false,
+                        bool is_dropgrad = false) {
         LayerConfig layer_config;
         layer_config.rows = dim1;
         layer_config.cols = dim2;
         layer_config.activation = activation;
         layer_config.is_dropout = is_dropout;
+        layer_config.is_dropgrad = is_dropgrad;
         layer_configs.push_back(layer_config);
     }
 
