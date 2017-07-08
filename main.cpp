@@ -10,22 +10,18 @@
 #include "examples/cifar_experiment.h"
 #include "examples/iris_experiment.h"
 
-void printScenario() {
-    Scenario s3("C0.7", 10, 0.7f);
-
-    for (int i = 0; i < s3.size(); i++) {
-        std::cout << s3.getKeepRate(i) << " ";
-    }
-    s3.print();
-    Scenario s4("C0.8", 10, 0.8f);
-    s4.print();
+void foo() {
+    auto mat = Eigen::MatrixXf::Random(10, 10);
+    // mat.normalize();
+    // std::cout << mat.array() << std::endl;
+    // std::cout << mat << std::endl;
 }
 
 int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    printScenario();
+    foo();
 
     MnistExperiment mnist_experiment;
     mnist_experiment.run();
