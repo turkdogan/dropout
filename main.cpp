@@ -15,6 +15,9 @@ void foo() {
     // mat.normalize();
     // std::cout << mat.array() << std::endl;
     // std::cout << mat << std::endl;
+
+    auto dropout_mask = (mat.array() > 0.5).select(mat, 1.0);
+    std::cout << dropout_mask << std::endl;
 }
 
 int main() {

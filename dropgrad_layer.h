@@ -17,6 +17,7 @@ public:
 private:
     Eigen::MatrixXf dropout_mask;
 
+    bool first_time;
 };
 
 #endif

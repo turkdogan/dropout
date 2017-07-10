@@ -26,15 +26,13 @@ void MnistDropgradExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {400, 800, 1000, 2000, 5000, 10000};
+    int dataset_sizes[] = {5000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runMnistNetwork(trial,
                             dataset_size,
                             input,
                             output,
-                            // train_input,
-                            // train_output,
                             validation_input,
                             validation_output,
                             test_input,

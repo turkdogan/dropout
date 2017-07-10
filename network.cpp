@@ -49,6 +49,7 @@ TrainingResult Network::trainNetwork(
 		splitMatrixPair(input, target, input_buffer, target_buffer, m_config.batch_size);
 		float error = 0.0f;
 		for (int b = 0; b < input_buffer.size(); b++) {
+            std::cout << "it: "<< b << " " << input_buffer.size() << std::endl;
 			error += iterate(input_buffer[b], target_buffer[b]);
 		}
 		error /= input_buffer.size();

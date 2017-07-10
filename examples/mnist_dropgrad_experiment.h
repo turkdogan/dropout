@@ -1,10 +1,8 @@
 #ifndef MNIST_DROPGRAD_EXPERIMENT_H
 #define MNIST_DROPGRAD_EXPERIMENT_H
 
-#include <vector>
-#include <map>
-
 #include "../experiment.h"
+
 #include "../network.h"
 
 #include "../Eigen/Dense"
