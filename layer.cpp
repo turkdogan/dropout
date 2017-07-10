@@ -35,7 +35,6 @@ Layer::Layer(const LayerConfig& layerConfig) {
     default:
         break;
     };
-
 }
 
 void Layer::feedforward(bool testing) {

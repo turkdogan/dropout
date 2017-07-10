@@ -49,7 +49,6 @@ TrainingResult Network::trainNetwork(
 		splitMatrixPair(input, target, input_buffer, target_buffer, m_config.batch_size);
 		float error = 0.0f;
 		for (int b = 0; b < input_buffer.size(); b++) {
-            std::cout << "it: "<< b << " " << input_buffer.size() << std::endl;
 			error += iterate(input_buffer[b], target_buffer[b]);
 		}
 		error /= input_buffer.size();
@@ -74,11 +73,11 @@ TrainingResult Network::trainNetwork(
 }
 
 void Network::feedforward(Eigen::MatrixXf& input, bool testing) {
-	Eigen::MatrixXf X = input;
-	layers[0]->X = X;
+    std::cout << "network feed" << std::endl;
+	layers[0]->X = input;
 	for (int i = 0; i < m_layer_count; i++) {
 		Layer *l1 = layers[i];
-		l1->feedforward();
+		l1->feedforward(testing);
 		if (i < m_layer_count - 1) {
 			Layer *l2 = layers[i+1];
 			l2->X = l1->Y;

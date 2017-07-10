@@ -11,21 +11,27 @@
 #include "examples/iris_experiment.h"
 
 void foo() {
-    auto mat = Eigen::MatrixXf::Random(10, 10);
+    Eigen::MatrixXf mat = Eigen::MatrixXf::Random(1, 1);
+    Eigen::MatrixXf mat2 = Eigen::MatrixXf::Random(1, 1) * 2;
+    std::cout << mat << std::endl;
+    std::cout << mat2 << std::endl << std::endl;
     // mat.normalize();
     // std::cout << mat.array() << std::endl;
     // std::cout << mat << std::endl;
 
-    auto dropout_mask = (mat.array() > 0.5).select(mat, 1.0);
-    std::cout << dropout_mask << std::endl;
+    for (int i = 1; i <= 10; i++) {
+        mat = (mat2 + mat * i) / (i + 1);
+        std::cout << mat << " ";
+        mat2 = mat2 * 0.3f;
+    }
+    std::cout << mat << std::endl;
 }
 
 int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    foo();
-
+    // MnistExperiment mnist_experiment;
     MnistDropgradExperiment mnist_experiment;
     mnist_experiment.run();
 

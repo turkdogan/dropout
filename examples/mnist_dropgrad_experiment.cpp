@@ -167,15 +167,15 @@ void MnistDropgradExperiment::runMnistNetwork(int trial,
 NetworkConfig MnistDropgradExperiment::getConfig() {
     const int dim1 = 784;
     const int dim2 = 200;
-    const int dim3 = 100;
+    const int dim3 = 120;
     const int dim4 = 10;
 
     NetworkConfig config;
     config.epoch_count = 120;
     config.report_each = 4;
-    config.batch_size = 40;
+    config.batch_size = 20;
     config.momentum = 0.9f;
-    config.learning_rate = 0.002f;
+    config.learning_rate = 0.001f;
 
     config.addLayerConfig(dim1, dim2, Activation::ReLU, false, true);
     config.addLayerConfig(dim2, dim3, Activation::ReLU, false, true);

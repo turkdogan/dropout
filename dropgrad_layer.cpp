@@ -7,43 +7,33 @@ DropgradLayer::DropgradLayer(const LayerConfig& layerConfig)
 void DropgradLayer::feedforward(bool testing) {
     Layer::feedforward(testing);
     if (testing) {
-        // Y = Y * m_scenario.averageDropout();
+        std::cout << "test";
+        Y = Y * dropout_avg;
     }
     else {
-        // calculate the keeping rates after the first gradient calculation
-        // therefore for the first feedforward we need to skip this step
-        // due to there is not gradient in the first feedforward step
-        if (!first_time) {
-            // dropout_mask = binomial(Y.rows(), Y.cols(), dropout_ratio);
-            auto grad = DZ;
-            std::cout << grad.rows() << ", " << Y.rows() << std::endl;
-            std::cout << grad.cols() << ", " << Y.cols() << std::endl << std::endl;
-            // grad.normalize();
-            dropout_mask = (grad.array() > 0.5).select(grad, 1.0);
-            Y = Y.cwiseProduct(dropout_mask);
+        if (m_counter > 0) {
+            std::cout << "fed ";
+            Eigen::MatrixXf abs_gradient = m_gradient.cwiseAbs();
+            dropout_avg_mask = (dropout_avg_mask * m_counter + abs_gradient) / (m_counter + 1);
+            dropout_mask = binomial(1.0f - dropout_avg_mask.array());
+            dropout_avg = (dropout_avg * m_counter + dropout_mask) / (m_counter + 1);
+        } else {
+            dropout_mask = Eigen::MatrixXf::Ones(Y.rows(), Y.cols());
+            dropout_avg_mask = dropout_mask;
+            dropout_avg = dropout_mask;
         }
     }
+    m_counter++;
 }
 
 void DropgradLayer::backpropagate() {
-    auto dy = dactivation(Y);
-    auto mean = dy.mean();
-    if (!first_time) {
-        dy = dy.cwiseProduct(dropout_mask);
-    } else {
-        // DZ will be calculated
-        first_time = false;
-    }
-    DZ = D.cwiseProduct(dy);
+    std::cout << "back ";
+    m_gradient = dactivation(Y);
+    DZ = D.cwiseProduct(m_gradient).cwiseProduct(dropout_mask);
     DW = X.transpose() * DZ;
     DY = DZ * W.transpose();
 }
 
-/*
-  Set current dropout rate
-*/
 void DropgradLayer::preEpoch(const int epoch) {
     Layer::preEpoch(epoch);
-    first_time = true;
 }
-
