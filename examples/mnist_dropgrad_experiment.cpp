@@ -171,7 +171,7 @@ NetworkConfig MnistDropgradExperiment::getConfig() {
     const int dim4 = 10;
 
     NetworkConfig config;
-    config.epoch_count = 120;
+    config.epoch_count = 320;
     config.report_each = 4;
     config.batch_size = 20;
     config.momentum = 0.9f;

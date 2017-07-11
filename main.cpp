@@ -10,6 +10,34 @@
 #include "examples/cifar_experiment.h"
 #include "examples/iris_experiment.h"
 
+void foo3() {
+    Eigen::MatrixXf mat = Eigen::MatrixXf::Random(2, 3);
+    Eigen::VectorXf ones = Eigen::VectorXf::Ones(3);
+    Eigen::VectorXf mean = mat.colwise().mean();
+
+    std::cout << mean << std::endl;
+    std::cout << ones << std::endl;
+    ones = ones + mean;
+    std::cout << ones << std::endl;
+}
+
+void foo2() {
+    Eigen::MatrixXf mat = Eigen::MatrixXf::Random(2, 3);
+    std::cout << mat << std::endl;
+    Eigen::VectorXf mean = mat.colwise().mean();
+    std::cout << mean << std::endl;
+
+    std::cout << std::endl;
+    Eigen::MatrixXf mat2 = Eigen::MatrixXf::Random(4, 3);
+    std::cout << mat2 << std::endl << std::endl;
+    Eigen::MatrixXf result = mat2.array().rowwise() * mean.transpose().array();
+    std::cout << result << std::endl;
+    std::cout << std::endl;
+    std::cout << result.rows() << "-" << result.cols() << std::endl;
+
+    // auto mat2 = mat.rowwise() * mean;
+}
+
 void foo() {
     Eigen::MatrixXf mat = Eigen::MatrixXf::Random(1, 1);
     Eigen::MatrixXf mat2 = Eigen::MatrixXf::Random(1, 1) * 2;

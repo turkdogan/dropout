@@ -3,13 +3,13 @@
 Layer::Layer(const LayerConfig& layerConfig) {
     if (layerConfig.activation == Activation::Sigmoid) {
         W = xavierMatrix(layerConfig.rows, layerConfig.cols, true);
-    } else if (layerConfig.activation == Activation::Sigmoid) {
+    } else if (layerConfig.activation == Activation::Tanh) {
         W = xavierMatrix(layerConfig.rows, layerConfig.cols, false);
     } else {
         int r = layerConfig.rows;
         int c = layerConfig.cols;
         // http://cs231n.github.io/neural-networks-2/
-        W = Eigen::MatrixXf::Random(r, c) * sqrt(2.0f/(r * c));
+        W = Eigen::MatrixXf::Random(r, c) * sqrt(2.0f/(r + c));
     }
     W_change = Eigen::MatrixXf::Zero(W.rows(), W.cols());
     B = Eigen::VectorXf::Ones(W.cols());

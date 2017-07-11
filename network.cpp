@@ -18,10 +18,13 @@ Network::Network(
 		LayerConfig& layer_config = config.layer_configs[i];
 
         if (layer_config.is_dropout && config.scenario.isEnabled()) {
+            std::cout << "dropout layer..." << std::endl;
             layers[i] = new DropoutLayer(layer_config, config.scenario);
         } else if (layer_config.is_dropgrad) {
+            std::cout << "grad layer..." << std::endl;
             layers[i] = new DropgradLayer(layer_config);
         } else {
+            std::cout << "layer..." << std::endl;
 			layers[i] = new Layer(layer_config);
         }
 	}
@@ -73,7 +76,6 @@ TrainingResult Network::trainNetwork(
 }
 
 void Network::feedforward(Eigen::MatrixXf& input, bool testing) {
-    std::cout << "network feed" << std::endl;
 	layers[0]->X = input;
 	for (int i = 0; i < m_layer_count; i++) {
 		Layer *l1 = layers[i];
