@@ -2,12 +2,9 @@
 
 void DropoutLayer::feedforward(bool testing) {
     Layer::feedforward(testing);
-    if (testing) {
-        Y = Y * m_scenario.averageDropout();
-    }
-    else {
+    if (!testing) {
         dropout_mask = binomial(Y.rows(), Y.cols(), dropout_ratio);
-        Y = Y.cwiseProduct(dropout_mask);
+        Y = Y.cwiseProduct(dropout_mask) * (1.0f/dropout_ratio);
     }
 }
 

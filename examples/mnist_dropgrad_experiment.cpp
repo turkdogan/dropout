@@ -171,14 +171,14 @@ NetworkConfig MnistDropgradExperiment::getConfig() {
     const int dim4 = 10;
 
     NetworkConfig config;
-    config.epoch_count = 320;
+    config.epoch_count = 120;
     config.report_each = 4;
     config.batch_size = 20;
     config.momentum = 0.9f;
     config.learning_rate = 0.001f;
 
-    config.addLayerConfig(dim1, dim2, Activation::ReLU, false, true);
-    config.addLayerConfig(dim2, dim3, Activation::ReLU, false, true);
+    config.addLayerConfig(dim1, dim2, Activation::Tanh, false, true);
+    config.addLayerConfig(dim2, dim3, Activation::Tanh, false, true);
     /* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
     config.addLayerConfig(dim3, dim4, Activation::Softmax, false, false);
 
