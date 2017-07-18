@@ -26,7 +26,7 @@ void MnistDropgradExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {5000};
+    int dataset_sizes[] = {50000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runMnistNetwork(trial,
@@ -168,7 +168,8 @@ NetworkConfig MnistDropgradExperiment::getConfig() {
     const int dim1 = 784;
     const int dim2 = 200;
     const int dim3 = 120;
-    const int dim4 = 10;
+    const int dim4 = 40;
+    const int dim5 = 10;
 
     NetworkConfig config;
     config.epoch_count = 120;
@@ -179,8 +180,9 @@ NetworkConfig MnistDropgradExperiment::getConfig() {
 
     config.addLayerConfig(dim1, dim2, Activation::Tanh, false, true);
     config.addLayerConfig(dim2, dim3, Activation::Tanh, false, true);
+    config.addLayerConfig(dim3, dim5, Activation::Softmax, false, false);
     /* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
-    config.addLayerConfig(dim3, dim4, Activation::Softmax, false, false);
+    // config.addLayerConfig(dim4, dim5, Activation::Softmax, false, false);
 
     return config;
 }

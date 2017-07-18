@@ -63,9 +63,6 @@ int main() {
     MnistDropgradExperiment mnist_experiment;
     mnist_experiment.run();
 
-    // CifarExperiment cifar_experiment;
-    // cifar_experiment.run();
-
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;
 	typedef std::chrono::duration<float> float_seconds;

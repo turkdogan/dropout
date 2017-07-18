@@ -32,6 +32,7 @@ struct NetworkConfig {
         layer_config.activation = activation;
         layer_config.is_dropout = is_dropout;
         layer_config.is_dropgrad = is_dropgrad;
+        layer_config.is_enabled = is_dropout || is_dropgrad;
         layer_configs.push_back(layer_config);
     }
 

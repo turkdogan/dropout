@@ -26,7 +26,7 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {5000};
+    int dataset_sizes[] = {50000};
     // int dataset_sizes[] = {400, 800, 1000, 2000, 5000, 10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
@@ -243,10 +243,11 @@ NetworkConfig MnistExperiment::getConfig() {
     const int dim1 = 784;
     const int dim2 = 200;
     const int dim3 = 100;
-    const int dim4 = 10;
+    const int dim4 = 50;
+    const int dim5 = 10;
 
     NetworkConfig config;
-    config.epoch_count = 120;
+    config.epoch_count = 220;
     config.report_each = 4;
     config.batch_size = 40;
     config.momentum = 0.9f;
@@ -254,8 +255,9 @@ NetworkConfig MnistExperiment::getConfig() {
 
     config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
     config.addLayerConfig(dim2, dim3, Activation::ReLU, true);
+    config.addLayerConfig(dim3, dim4, Activation::ReLU, true);
     /* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
-    config.addLayerConfig(dim3, dim4, Activation::Softmax, false);
+    config.addLayerConfig(dim4, dim5, Activation::Softmax, false);
 
     return config;
 }

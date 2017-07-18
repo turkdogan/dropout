@@ -33,8 +33,8 @@ void DropgradLayer::feedforward(bool testing) {
             dropout_mask = Eigen::MatrixXf::Zero(Y.rows(), Y.cols());
             dropout_avg_mask = dropout_mask;
         }
+        m_counter++;
     }
-    m_counter++;
 }
 
 void DropgradLayer::backpropagate() {
