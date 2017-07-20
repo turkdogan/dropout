@@ -28,6 +28,10 @@ private:
 
     // to calculate the dropout_mean_mask
     int m_counter;
+
+    int m_epoch_count;
+
+    int m_current_epoch;
 };
 
 #endif

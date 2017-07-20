@@ -59,8 +59,8 @@ int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    // MnistExperiment mnist_experiment;
-    MnistDropgradExperiment mnist_experiment;
+    MnistExperiment mnist_experiment;
+    // MnistDropgradExperiment mnist_experiment;
     mnist_experiment.run();
 
 	auto last = std::chrono::system_clock::now();

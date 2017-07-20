@@ -33,6 +33,7 @@ struct NetworkConfig {
         layer_config.is_dropout = is_dropout;
         layer_config.is_dropgrad = is_dropgrad;
         layer_config.is_enabled = is_dropout || is_dropgrad;
+        layer_config.epoch_count = epoch_count;
         layer_configs.push_back(layer_config);
     }
 

@@ -20,7 +20,7 @@ Network::Network(
         if (layer_config.is_dropout && config.scenario.isEnabled()) {
             std::cout << "dropout layer..." << std::endl;
             layers[i] = new DropoutLayer(layer_config, config.scenario);
-        } else if (layer_config.is_dropgrad && config.scenario.isEnabled()) {
+        } else if (layer_config.is_dropgrad) {
             std::cout << "grad layer..." << std::endl;
             layers[i] = new DropgradLayer(layer_config);
         } else {

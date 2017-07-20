@@ -152,7 +152,6 @@ void MnistExperiment::runMnistNetwork(int trial,
         for (const Scenario& scenario : scenarios) {
 
             std::cout << "Running: " << scenario.name()<< std::endl;
-            scenario.print();
             srand(trial + 55);
 
             // read data from scratch

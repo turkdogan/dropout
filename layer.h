@@ -20,6 +20,9 @@ struct LayerConfig {
     Activation activation;
     bool is_dropout = false;
     bool is_dropgrad = false;
+    bool is_enabled = false;
+
+    int epoch_count = 0;
 };
 
 class Layer {
