@@ -75,8 +75,9 @@ int main() {
     // MnistExperiment mnist_experiment;
     // mnist_experiment.run();
 
-    CifarExperiment cifar_experiment;
-    cifar_experiment.run();
+    // CifarExperiment cifar_experiment;
+    // cifar_experiment.run();
+  testScenarios();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;
