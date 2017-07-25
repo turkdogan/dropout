@@ -88,10 +88,10 @@ private:
         Eigen::MatrixXf& input,
         Eigen::MatrixXf& output);
 
-    void Network::backpropagate(
+    void backpropagate(
         Eigen::MatrixXf& error);
 
-    void Network::update();
+    void update();
 
     Layer **layers;
     int m_layer_count;

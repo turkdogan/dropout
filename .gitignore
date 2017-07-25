@@ -1,8 +1,8 @@
 *.projectile
 
 *.org
+*.o
 vs
 python/input
 python/output
-*.o
 prog

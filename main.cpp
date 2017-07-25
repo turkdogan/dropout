@@ -5,10 +5,10 @@
 
 #include <chrono>
 
-#include "examples/mnist_experiment.h"
-#include "examples/mnist_dropgrad_experiment.h"
-#include "examples/cifar_experiment.h"
-#include "examples/iris_experiment.h"
+#include "mnist_experiment.h"
+#include "mnist_dropgrad_experiment.h"
+#include "cifar_experiment.h"
+#include "iris_experiment.h"
 
 void foo3() {
     Eigen::MatrixXf mat = Eigen::MatrixXf::Random(2, 3);
@@ -59,9 +59,11 @@ int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
-    MnistExperiment mnist_experiment;
-    // MnistDropgradExperiment mnist_experiment;
-    mnist_experiment.run();
+    // MnistExperiment mnist_experiment;
+    // mnist_experiment.run();
+
+    // CifarExperiment cifar_experiment;
+    // cifar_experiment.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;
