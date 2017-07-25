@@ -7,7 +7,8 @@
 #include <random>
 
 #include "layer.h"
-#include "dropout_layer.h"
+#include "layer_drop.h"
+#include "layer_grad.h"
 #include "scenario.h"
 
 struct NetworkConfig {

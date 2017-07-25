@@ -1,10 +1,10 @@
-#include "mnist_dropgrad_experiment.h"
+#include "exp_grad.h"
 
 #include <iostream>
 
-#include "../utils.h"
-#include "../network_utils.h"
-#include "../scenario.h"
+#include "utils.h"
+#include "network_utils.h"
+#include "scenario.h"
 
 void MnistDropgradExperiment::run() {
     std::cout << "Mnist Dropout Experiment Run..." << std::endl;

@@ -1,4 +1,4 @@
-#include "dropout_layer.h"
+#include "layer_drop.h"
 
 void DropoutLayer::feedforward(bool testing) {
     Layer::feedforward(testing);

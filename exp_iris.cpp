@@ -1,10 +1,10 @@
-#include "iris_experiment.h"
+#include "exp_iris.h"
 
 #include <iostream>
 
-#include "../utils.h"
-#include "../network.h"
-#include "../scenario.h"
+#include "utils.h"
+#include "network.h"
+#include "scenario.h"
 
 void IrisExperiment::run() {
 	NetworkConfig config;

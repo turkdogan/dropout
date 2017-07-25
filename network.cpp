@@ -4,8 +4,6 @@
 #include "network.h"
 #include "utils.h"
 
-#include "dropgrad_layer.h"
-
 Network::Network(
 	NetworkConfig& config)
 	: m_config(config)

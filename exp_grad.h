@@ -1,11 +1,11 @@
 #ifndef MNIST_DROPGRAD_EXPERIMENT_H
 #define MNIST_DROPGRAD_EXPERIMENT_H
 
-#include "../experiment.h"
+#include "exp.h"
 
-#include "../network.h"
+#include "network.h"
 
-#include "../Eigen/Dense"
+#include "Eigen/Dense"
 
 class MnistDropgradExperiment : public Experiment {
 

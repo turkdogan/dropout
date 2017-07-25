@@ -1,4 +1,4 @@
-#include "dropgrad_layer.h"
+#include "layer_grad.h"
 
 DropgradLayer::DropgradLayer(const LayerConfig& layerConfig)
     : Layer(layerConfig),

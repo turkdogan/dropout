@@ -4,10 +4,10 @@
 #include <vector>
 #include <map>
 
-#include "../experiment.h"
-#include "../network.h"
+#include "exp.h"
+#include "network.h"
 
-#include "../Eigen/Dense"
+#include "Eigen/Dense"
 
 class CifarExperiment : public Experiment {
 

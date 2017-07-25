@@ -5,10 +5,10 @@
 
 #include <chrono>
 
-#include "mnist_experiment.h"
-#include "mnist_dropgrad_experiment.h"
-#include "cifar_experiment.h"
-#include "iris_experiment.h"
+#include "exp_mnist.h"
+#include "exp_grad.h"
+#include "exp_cifar.h"
+#include "exp_iris.h"
 
 void foo3() {
     Eigen::MatrixXf mat = Eigen::MatrixXf::Random(2, 3);
@@ -42,7 +42,7 @@ void foo() {
     Eigen::MatrixXf mat = Eigen::MatrixXf::Random(1, 1);
     Eigen::MatrixXf mat2 = Eigen::MatrixXf::Random(1, 1) * 2;
     std::cout << mat << std::endl;
-    std::cout << mat2 << std::endl << std::endl;
+    std::cout << mat2 << std::endl;
     // mat.normalize();
     // std::cout << mat.array() << std::endl;
     // std::cout << mat << std::endl;

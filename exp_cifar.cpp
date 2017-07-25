@@ -1,10 +1,10 @@
-#include "cifar_experiment.h"
+#include "exp_cifar.h"
 
 #include <iostream>
 
-#include "../utils.h"
-#include "../network_utils.h"
-#include "../scenario.h"
+#include "utils.h"
+#include "network_utils.h"
+#include "scenario.h"
 
 const int DIM_CIFAR = 3072;
 
