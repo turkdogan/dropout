@@ -4,3 +4,5 @@
 vs
 python/input
 python/output
+*.o
+prog
