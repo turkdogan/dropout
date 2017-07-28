@@ -15,6 +15,13 @@ public:
     void preEpoch(const int epoch) override;
 
 private:
+
+    void postFeedforward();
+
+    void technique1();
+    void technique2();
+    void technique3();
+
     Eigen::MatrixXf m_gradient;
 
     // mask to calculate drop rate for current iteration
@@ -25,6 +32,8 @@ private:
 
     // average of the applied dropout rates for each neuron
     Eigen::VectorXf dropout_avg;
+
+    bool m_drop;
 
     // to calculate the dropout_mean_mask
     int m_counter;

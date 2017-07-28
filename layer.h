@@ -38,6 +38,8 @@ public:
 
     virtual void preEpoch(const int epoch);
 
+    virtual void report();
+
 public:
 	Eigen::MatrixXf X;
 	Eigen::MatrixXf Y;

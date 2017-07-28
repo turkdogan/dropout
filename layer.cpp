@@ -61,3 +61,7 @@ void Layer::update(float momentum, float learning_rate) {
 void Layer::preEpoch(const int epoch) {
     // do nothing 
 }
+
+void Layer::report() {
+    // do nothing 
+}

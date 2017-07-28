@@ -17,12 +17,16 @@ public:
 
     void preEpoch(const int epoch) override;
 
+    void report() override;
+
 private:
     Eigen::MatrixXf dropout_mask;
     float dropout_ratio = 1.0f;
     std::vector<float> dropouts;
 
     Scenario m_scenario;
+
+    double m_avg_grad;
 };
 
 #endif

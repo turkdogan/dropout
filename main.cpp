@@ -59,8 +59,12 @@ int main() {
 	srand(time(NULL));
 	auto first = std::chrono::system_clock::now();
 
+    // IrisExperiment iris_experiment;
+    // iris_experiment.run();
+
+    MnistDropgradExperiment mnist_experiment;
     // MnistExperiment mnist_experiment;
-    // mnist_experiment.run();
+    mnist_experiment.run();
 
     // CifarExperiment cifar_experiment;
     // cifar_experiment.run();

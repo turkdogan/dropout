@@ -31,7 +31,7 @@ void IrisExperiment::run() {
 }
 
 Dataset IrisExperiment::readIris() {
-	std::ifstream file("iris.data", std::ios::in);
+	std::ifstream file("iris/iris.data", std::ios::in);
 	if (!file.is_open()) {
 		std::cerr << "Iris data file could not be read" << std::endl;
 		return Dataset{};

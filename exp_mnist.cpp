@@ -10,7 +10,7 @@ void MnistExperiment::run() {
     std::cout << "Mnist Dropout Experiment Run..." << std::endl;
 
     int total_size = 60000;
-    int validation_size = 100;
+    int validation_size = 1000;
     int validation_begin = total_size - validation_size;
 
     Eigen::MatrixXf input = readMnistInput("mnist/train-images.idx3-ubyte", total_size);
@@ -26,7 +26,7 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {50000};
+    int dataset_sizes[] = {5000};
     // int dataset_sizes[] = {400, 800, 1000, 2000, 5000, 10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
@@ -190,7 +190,7 @@ std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int e
 
     Scenario s1("NO-DROPOUT");
     std::string no_key = "NO";
-    scenario_map[no_key].push_back(s1);
+    // scenario_map[no_key].push_back(s1);
 
     auto convex_fn  = [](int epoch) {return epoch * epoch;};
     auto concave_fn = [](int epoch) {return sqrt(epoch);};
@@ -246,8 +246,8 @@ NetworkConfig MnistExperiment::getConfig() {
     const int dim5 = 10;
 
     NetworkConfig config;
-    config.epoch_count = 220;
-    config.report_each = 4;
+    config.epoch_count = 100;
+    config.report_each = 1;
     config.batch_size = 40;
     config.momentum = 0.9f;
     config.learning_rate = 0.001f;
