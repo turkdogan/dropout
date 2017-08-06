@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-g -o2 -std=c++11 -Wall -pedantic
+CXXFLAGS=-g -o2 -std=c++11 -pedantic
 BIN=prog
 
 SRC=$(wildcard *.cpp examples/*.cpp)

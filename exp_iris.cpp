@@ -9,16 +9,15 @@
 void IrisExperiment::run() {
 	NetworkConfig config;
 	config.epoch_count = 3000;
-	config.learning_rate = 0.001f;
-	config.momentum = 0.5f;
+	config.learning_rate = 0.01f;
+	config.momentum = 0.9f;
 	config.batch_size = 30;
 	config.report_each = 100;
 
-    config.addLayerConfig(4, 150, Activation::Sigmoid, true);
-    config.addLayerConfig(150, 40, Activation::Sigmoid, true);
+    config.addLayerConfig(4, 150, Activation::Sigmoid, false, true);
+    config.addLayerConfig(150, 40, Activation::Sigmoid, false, true);
     config.addLayerConfig(40, 3, Activation::Softmax, false);
 
-    config.scenario = Scenario("C08", config.epoch_count, 0.8f);
 
     Network network(config);
 

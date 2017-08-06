@@ -28,6 +28,11 @@ Eigen::MatrixXf xavierMatrix(int rows, int cols, bool is_sigmoid = true);
 
 Eigen::MatrixXf binomial(int rows, int cols, double ratio);
 
+// keep rate matrix, each element of generated matrix
+// will be determined the corresponding value of the mat matrix
+// a random value between 0 and 1 is generated, if this
+// specific value is less then corresponding element of mat
+// then generated matrix element is set to 1 or else 0
 Eigen::MatrixXf binomial(const Eigen::MatrixXf& mat);
 
 Eigen::MatrixXf _tanh(Eigen::MatrixXf& mat);
