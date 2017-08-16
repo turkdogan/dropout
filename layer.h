@@ -29,6 +29,7 @@ class Layer {
 
 public:
     Layer(const LayerConfig& layerConfig);
+    virtual ~Layer();
 
 	virtual void feedforward(bool testing = false);
 
