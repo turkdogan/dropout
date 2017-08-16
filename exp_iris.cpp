@@ -8,7 +8,7 @@
 
 void IrisExperiment::run() {
 	NetworkConfig config;
-	config.epoch_count = 3000;
+	config.epoch_count = 10000;
 	config.learning_rate = 0.01f;
 	config.momentum = 0.9f;
 	config.batch_size = 30;

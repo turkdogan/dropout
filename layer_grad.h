@@ -14,15 +14,9 @@ public:
 
     void preEpoch(const int epoch) override;
 
+    void report() override;
+
 private:
-
-    void postFeedforward();
-
-    void technique1();
-    void technique2();
-    void technique3();
-
-    Eigen::MatrixXf m_gradient;
 
     // mask to calculate drop rate for current iteration
     Eigen::MatrixXf dropout_mask;
@@ -36,11 +30,13 @@ private:
     bool m_drop;
 
     // to calculate the dropout_mean_mask
-    int m_counter;
+    int m_current_iteration;
 
     int m_epoch_count;
 
     int m_current_epoch;
+
+    double m_avg_keep_rate;
 };
 
 #endif
