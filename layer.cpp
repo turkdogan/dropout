@@ -37,6 +37,9 @@ Layer::Layer(const LayerConfig& layerConfig) {
     };
 }
 
+Layer::~Layer() {
+}
+
 void Layer::feedforward(bool testing) {
     Eigen::MatrixXf z1 = (X * W).rowwise() + B.transpose();
     Y = activation(z1);
