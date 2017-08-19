@@ -26,7 +26,7 @@ void MnistDropgradExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int dataset_sizes[] = {4000};
+    int dataset_sizes[] = {59900};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runMnistNetwork(trial,
@@ -172,8 +172,8 @@ NetworkConfig MnistDropgradExperiment::getConfig() {
     const int dim5 = 10;
 
     NetworkConfig config;
-    config.epoch_count = 1;
-    config.report_each = 1;
+    config.epoch_count = 120;
+    config.report_each = 2;
     config.batch_size = 20;
     config.momentum = 0.9f;
     config.learning_rate = 0.001f;
