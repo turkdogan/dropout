@@ -25,8 +25,6 @@ private:
     std::vector<float> dropouts;
 
     Scenario m_scenario;
-
-    double m_avg_grad;
 };
 
 #endif

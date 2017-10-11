@@ -48,6 +48,7 @@ void DropgradLayer::feedforward(bool testing) {
 void DropgradLayer::backpropagate() {
     DZ = D.cwiseProduct(dactivation(Y));
 
+    // TODO make hyperparam
     double alpha = 1.0;
 
     dropout_avg_mask = (dropout_avg_mask * m_current_iteration + alpha * DZ.cwiseAbs()) /

@@ -13,7 +13,6 @@ void DropoutLayer::backpropagate() {
     // dy = dy.cwiseProduct(dropout_mask) * (1.0f/dropout_ratio);
     DZ = D.cwiseProduct(dy);
     DZ = DZ.cwiseProduct(dropout_mask);
-    m_avg_grad += DZ.mean();
     DW = X.transpose() * DZ;
     DY = DZ * W.transpose();
 }
@@ -29,6 +28,4 @@ void DropoutLayer::preEpoch(const int epoch) {
 
 void DropoutLayer::report() {
     Layer::report();
-    std::cout << "avg grad: " << m_avg_grad << std::endl;
-    m_avg_grad = 0.0;
 }
