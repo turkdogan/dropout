@@ -118,9 +118,9 @@ Eigen::MatrixXf binomial(const Eigen::MatrixXf& mat)
             double rnd = ((double) rand() / (RAND_MAX));
             /* std::cout << rnd << " "; */
             if (mat(r, c) > rnd) {
-                result(r, c) = 1.0f;
-            } else {
                 result(r, c) = 0.0f;
+            } else {
+                result(r, c) = 1.0f;
             }
 		}
 	}

@@ -69,7 +69,7 @@ TrainingResult Network::trainNetwork(
 			if (epoch % m_config.report_each == 0) {
 				std::cout << epoch << ": " << error << std::endl;
 
-                layers[0]->report();
+                // layers[0]->report();
                 // for (int i = 0; i < m_layer_count; i++) {
                 //     Layer *l = layers[i];
                 //     l->report();

@@ -15,7 +15,7 @@ void IrisExperiment::run() {
 	config.report_each = 1000;
 
     // Dropout network layer
-    config.addLayerConfig(4, 150, Activation::Sigmoid, true, false);
+    config.addLayerConfig(4, 150, Activation::Sigmoid, false, false);
     // Standard network layer
     config.addLayerConfig(150, 40, Activation::Sigmoid, false, false);
     // Standard network layer

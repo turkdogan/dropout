@@ -12,6 +12,7 @@ void DropoutLayer::backpropagate() {
     auto dy = dactivation(Y);
     // dy = dy.cwiseProduct(dropout_mask) * (1.0f/dropout_ratio);
     DZ = D.cwiseProduct(dy);
+    // It does not matter to mask with DZ or dy
     DZ = DZ.cwiseProduct(dropout_mask);
     DW = X.transpose() * DZ;
     DY = DZ * W.transpose();

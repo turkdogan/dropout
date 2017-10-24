@@ -6,7 +6,6 @@
 #include <chrono>
 
 #include "exp_mnist.h"
-#include "exp_grad.h"
 #include "exp_cifar.h"
 #include "exp_iris.h"
 
@@ -16,12 +15,6 @@ int main() {
 
     IrisExperiment iris_experiment;
     iris_experiment.run();
-
-    // MnistDropgradExperiment mnist_experiment;
-    // MnistExperiment mnist_experiment;
-    // mnist_experiment.run();
-
-    // cifar_experiment.run();
 
 	auto last = std::chrono::system_clock::now();
 	auto dur = last - first;

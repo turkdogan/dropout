@@ -1,5 +1,5 @@
 *.projectile
-
+*.txt
 *.org
 *.o
 vs

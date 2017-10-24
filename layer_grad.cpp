@@ -11,6 +11,12 @@ DropgradLayer::DropgradLayer(const LayerConfig& layerConfig)
 void DropgradLayer::feedforward(bool testing) {
     Layer::feedforward(testing);
     if (!testing) {
+        // use previous gradient values of the layer
+        // in average the mean of gradient of the layer decreases
+
+    }
+
+    if (!testing) {
         // in the first iteration of the first epoch,
         // we need to set dropout mask by hand
         if (!m_drop) {
@@ -21,6 +27,8 @@ void DropgradLayer::feedforward(bool testing) {
             m_drop = true;
         } else {
             if (m_current_iteration == 0) {
+                // consider previous epoch 
+
                 Eigen::MatrixXf diff = dropout_prev - dropout_avg_mask;
                 Eigen::MatrixXf keep_rates = diff.cwiseAbs();
 
