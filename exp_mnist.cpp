@@ -26,6 +26,13 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
+    /* read the dataset
+       for each scenario to test
+        prepare data (shuffle, split etc.)
+        Prepare network config
+        save results for further analysis with meaningfull nameing
+    */
+
     int dataset_sizes[] = {5000};
     // int dataset_sizes[] = {400, 800, 1000, 2000, 5000, 10000};
     for (int trial = 0; trial < 1; trial++) {

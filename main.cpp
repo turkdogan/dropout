@@ -10,16 +10,16 @@
 #include "exp_iris.h"
 
 int main() {
-	srand(time(NULL));
-	auto first = std::chrono::system_clock::now();
+    srand(time(NULL));
+    auto first = std::chrono::system_clock::now();
 
     IrisExperiment iris_experiment;
     iris_experiment.run();
 
-	auto last = std::chrono::system_clock::now();
-	auto dur = last - first;
-	typedef std::chrono::duration<float> float_seconds;
-	auto secs = std::chrono::duration_cast<float_seconds>(dur);
-	std::cout << secs.count() << " seconds... \n";
-	return 0;
+    auto last = std::chrono::system_clock::now();
+    auto dur = last - first;
+    typedef std::chrono::duration<float> float_seconds;
+    auto secs = std::chrono::duration_cast<float_seconds>(dur);
+    std::cout << secs.count() << " seconds... \n";
+    return 0;
 }
