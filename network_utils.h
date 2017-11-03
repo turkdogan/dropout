@@ -35,12 +35,12 @@ static void writeTrainingResult(TrainingResult& t_result, std::string file_name)
     out_file.close();
 
     // first laye weights only, not all t_result.weights...
-    /* for (int i = 0; i < 1; i++) { */
-    /*     std::ofstream w_out_file; */
-    /*     w_out_file.open("W" + std::to_string(i) + "_" + file_name); */
-    /*     w_out_file << t_result.weights[i]; */
-    /*     w_out_file.close(); */
-    /* } */
+    for (int i = 0; i < 1; i++) {
+        std::ofstream w_out_file;
+        w_out_file.open("W" + std::to_string(i) + "_" + file_name);
+        w_out_file << t_result.weights[i];
+        w_out_file.close();
+    }
 }
 
 

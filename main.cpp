@@ -13,8 +13,11 @@ int main() {
     srand(time(NULL));
     auto first = std::chrono::system_clock::now();
 
-    IrisExperiment iris_experiment;
-    iris_experiment.run();
+    MnistExperiment experiment;
+    experiment.run();
+
+    // IrisExperiment iris_experiment;
+    // iris_experiment.run();
 
     auto last = std::chrono::system_clock::now();
     auto dur = last - first;
