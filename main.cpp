@@ -9,15 +9,17 @@
 #include "exp_cifar.h"
 #include "exp_iris.h"
 
+#include "layer_dropconnect.h"
+
 int main() {
     srand(time(NULL));
     auto first = std::chrono::system_clock::now();
 
-    MnistExperiment experiment;
-    experiment.run();
+    // MnistExperiment experiment;
+    // experiment.run();
 
-    // IrisExperiment iris_experiment;
-    // iris_experiment.run();
+    IrisExperiment iris_experiment;
+    iris_experiment.run();
 
     auto last = std::chrono::system_clock::now();
     auto dur = last - first;

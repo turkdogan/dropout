@@ -21,6 +21,9 @@ Network::Network(
         } else if (layer_config.is_dropgrad) {
             std::cout << "grad layer..." << std::endl;
             layers[i] = new DropgradLayer(layer_config);
+        } else if (layer_config.is_dropconnect) {
+            std::cout << "dropconnect layer... " << config.scenario.size() << std::endl;
+            layers[i] = new DropconnectLayer(layer_config, config.scenario);
         } else {
             std::cout << "layer..." << std::endl;
 			layers[i] = new Layer(layer_config);

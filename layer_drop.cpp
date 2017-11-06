@@ -11,11 +11,11 @@ void DropoutLayer::feedforward(bool testing) {
 void DropoutLayer::backpropagate() {
     auto dy = dactivation(Y);
     // dy = dy.cwiseProduct(dropout_mask) * (1.0f/dropout_ratio);
-    DZ = D.cwiseProduct(dy);
-    // It does not matter to mask with DZ or dy
-    DZ = DZ.cwiseProduct(dropout_mask);
-    DW = X.transpose() * DZ;
-    DY = DZ * W.transpose();
+    m_gradient = D.cwiseProduct(dy);
+    // It does not matter to mask with m_gradient or dy
+    m_gradient = m_gradient.cwiseProduct(dropout_mask);
+    DW = X.transpose() * m_gradient;
+    DY = m_gradient * W.transpose();
 }
 
 /*

@@ -54,17 +54,17 @@ void DropgradLayer::feedforward(bool testing) {
 }
 
 void DropgradLayer::backpropagate() {
-    DZ = D.cwiseProduct(dactivation(Y));
+    m_gradient = D.cwiseProduct(dactivation(Y));
 
     // TODO make hyperparam
     double alpha = 1.0;
 
-    dropout_avg_mask = (dropout_avg_mask * m_current_iteration + alpha * DZ.cwiseAbs()) /
+    dropout_avg_mask = (dropout_avg_mask * m_current_iteration + alpha * m_gradient.cwiseAbs()) /
         (m_current_iteration + 1) ;
 
-    DZ = DZ.cwiseProduct(dropout_mask);
-    DW = X.transpose() * DZ;
-    DY = DZ * W.transpose();
+    m_gradient = m_gradient.cwiseProduct(dropout_mask);
+    DW = X.transpose() * m_gradient;
+    DY = m_gradient * W.transpose();
 
     // increase iteration after backpropagate phase
     m_current_iteration++;

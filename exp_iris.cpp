@@ -14,10 +14,13 @@ void IrisExperiment::run() {
 	config.batch_size = 30;
 	config.report_each = 1000;
 
+    Scenario scenario("C0.5", 10000, 0.5f);
+    config.scenario = scenario;
+
     // Dropout network layer
-    config.addLayerConfig(4, 150, Activation::Sigmoid, false, false);
+    config.addLayerConfig(4, 150, Activation::Sigmoid, false, false, true);
     // Standard network layer
-    config.addLayerConfig(150, 40, Activation::Sigmoid, false, false);
+    config.addLayerConfig(150, 40, Activation::Sigmoid, false, false, true);
     // Standard network layer
     config.addLayerConfig(40, 3, Activation::Softmax, false, false);
 

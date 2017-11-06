@@ -33,6 +33,7 @@ def plot_weight_chart(data, file_name="", x_label="", y_label="",dim_x=28, dim_y
 	        index = index + 1
 
     plt.savefig("output/" + file_name + ".png", dpi=100)
+    plt.close()
 
 def plot_weights(file_name, dim__x=28, dim__y=28):
     f = open("input/" + file_name)

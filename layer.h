@@ -20,6 +20,7 @@ struct LayerConfig {
     Activation activation;
     bool is_dropout = false;
     bool is_dropgrad = false;
+    bool is_dropconnect = false;
     bool is_enabled = false;
 
     int epoch_count = 0;
@@ -60,7 +61,7 @@ protected:
 	float B_change;
 
 	Eigen::MatrixXf DW;
-	Eigen::MatrixXf DZ;
+	Eigen::MatrixXf m_gradient;
 
 	Eigen::MatrixXf(*activation)(Eigen::MatrixXf&);
 	Eigen::MatrixXf(*dactivation)(Eigen::MatrixXf&);

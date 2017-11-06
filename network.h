@@ -8,6 +8,7 @@
 
 #include "layer.h"
 #include "layer_drop.h"
+#include "layer_dropconnect.h"
 #include "layer_grad.h"
 #include "scenario.h"
 
@@ -26,14 +27,16 @@ struct NetworkConfig {
                         const int dim2,
                         Activation activation,
                         bool is_dropout = false,
-                        bool is_dropgrad = false) {
+                        bool is_dropgrad = false,
+                        bool is_dropconnect = false) {
         LayerConfig layer_config;
         layer_config.rows = dim1;
         layer_config.cols = dim2;
         layer_config.activation = activation;
         layer_config.is_dropout = is_dropout;
         layer_config.is_dropgrad = is_dropgrad;
-        layer_config.is_enabled = is_dropout || is_dropgrad;
+        layer_config.is_dropconnect = is_dropconnect;
+        layer_config.is_enabled = is_dropout || is_dropgrad || is_dropconnect;
         layer_config.epoch_count = epoch_count;
         layer_configs.push_back(layer_config);
     }

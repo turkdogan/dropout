@@ -8,23 +8,25 @@ import os, fnmatch
 
 def plot_batch_overfit(dataset, scenario_index_map):
     print(scenario_index_map)
-    fit = plt.figure();
-    plt.xticks([0, 400, 800, 1000, 2000, 3000, 400, 5000, 8000, 10000])
+    # fit = plt.figure();
+    # plt.xticks([0, 1000])
+    # plt.xticks([0, 200, 400, 800, 1000, 2000, 3000, 400, 5000, 8000, 10000])
 
     plot_list = []
+    # colors = ["r", "c"]
     colors = ["r", "c", "y", "b", "g", "m", "k", "violet", "lime", "dimgray", "yellow", "tan", "skyblue", "seashell", "seagreen"]
     scenarios = []
-    iterations = 120.0
+    epochs = 120.0
 
     for data in dataset:
         label = data['size']
-        value = data['overfit'] / iterations
+        value = data['overfit'] / epochs
         scenario = data['name'].split('_')[1]
         if scenario not in scenarios:
-            plott, = plt.plot(label, value, "o", markersize=15, color=colors[scenario_index_map[scenario]], label=scenario)
+            plott, = plt.plot(label, value, "o", markersize=10, color=colors[scenario_index_map[scenario]], label=scenario)
             scenarios.append(scenario)
         else:
-            plott, = plt.plot(label, value, "o", markersize=15, color=colors[scenario_index_map[scenario]])
+            plott, = plt.plot(label, value, "o", markersize=10, color=colors[scenario_index_map[scenario]])
 
     category = dataset[0]['category']
     plt.ylabel("Average overfit per epoch for all categories")
@@ -40,6 +42,7 @@ def parse_overfit_data(directory):
     for file_name in file_names:
         f = open(directory+ "/" + file_name, 'r')
         line = f.readline().rstrip('\n')
+        print("line: ", line)
         content = line.split(',')
         category = content[1]
         if category not in dataset:
@@ -66,6 +69,7 @@ def plot_overfits():
     index = 0
     for category in overfit_data:
         for experiment in overfit_data[category]:
+            print(experiment['name'])
             scenario = experiment['name'].split('_')[1]
             if scenario not in scenarios:
                 scenarios[scenario] = index

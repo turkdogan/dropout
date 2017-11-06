@@ -26,15 +26,8 @@ void MnistExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    /* read the dataset
-       for each scenario to test
-        prepare data (shuffle, split etc.)
-        Prepare network config
-  .com.havelsan.sgrs.common      save results for further analysis with meaningfull nameing
-    */
-
-    int dataset_sizes[] = {1000, 2000, 10000, 59000};
-    // int dataset_sizes[] = {400, 800, 1000, 2000, 5000, 10000};
+    int dataset_sizes[] = {1000, 2000, 10000};
+    // int dataset_sizes[] = {1000, 2000, 10000, 59000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runMnistNetwork(trial,
@@ -197,7 +190,7 @@ std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int e
 
     Scenario s1("NO-DROPOUT");
     std::string no_key = "NO";
-    // scenario_map[no_key].push_back(s1);
+    scenario_map[no_key].push_back(s1);
 
     auto convex_fn  = [](int epoch) {return epoch * epoch;};
     auto concave_fn = [](int epoch) {return sqrt(epoch);};
@@ -206,16 +199,13 @@ std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int e
     std::string constant_key = "CONSTANT";
     Scenario s2("C0.5", epoch_count, 0.5f);
     Scenario s3("C0.7", epoch_count, 0.7f);
-    // Scenario s4("C0.8", epoch_count, 0.8f);
     Scenario s5("C0.9", epoch_count, 0.9f);
     scenario_map[constant_key].push_back(s2);
     scenario_map[constant_key].push_back(s3);
-    // scenario_map[constant_key].push_back(s4);
     scenario_map[constant_key].push_back(s5);
 
     std::string increasing_key = "INC";
     Scenario s6("L055-095", epoch_count, 0.55f, 0.95f, linear_fn);
-    Scenario s6_dec("L095-055", epoch_count, 0.95f, 0.55f, linear_fn);
     Scenario s7("Concave055-095", epoch_count, 0.55f, 0.95f, concave_fn);
     Scenario s8("Convex0.55-095", epoch_count, 0.55f, 0.95f, convex_fn);
     scenario_map[increasing_key].push_back(s6);
@@ -223,11 +213,12 @@ std::map<std::string, std::vector<Scenario>> MnistExperiment::getScenarios(int e
     scenario_map[increasing_key].push_back(s8);
 
     std::string decreasing_key = "DEC";
-    Scenario s9("Concave095-055", epoch_count, 0.95f, 0.55f, concave_fn);
-    Scenario s10("Convex0.95-055", epoch_count, 0.95f, 0.55f, convex_fn);
-    scenario_map[decreasing_key].push_back(s9);
-    scenario_map[decreasing_key].push_back(s10);
+    Scenario s6_dec("L095-055", epoch_count, 0.95f, 0.55f, linear_fn);
+    Scenario s7_dec("Concave095-055", epoch_count, 0.95f, 0.55f, concave_fn);
+    Scenario s8_dec("Convex0.95-055", epoch_count, 0.95f, 0.55f, convex_fn);
     scenario_map[decreasing_key].push_back(s6_dec);
+    scenario_map[decreasing_key].push_back(s7_dec);
+    scenario_map[decreasing_key].push_back(s8_dec);
 
     std::string half_key = "HALF";
     Scenario s11("HConcave055-095", epoch_count, epoch_count
@@ -253,7 +244,7 @@ NetworkConfig MnistExperiment::getConfig() {
     const int dim5 = 10;
 
     NetworkConfig config;
-    config.epoch_count = 200;
+    config.epoch_count = 120;
     config.report_each = 1;
     config.batch_size = 40;
     config.momentum = 0.9f;
@@ -262,7 +253,6 @@ NetworkConfig MnistExperiment::getConfig() {
     config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
     config.addLayerConfig(dim2, dim3, Activation::ReLU, true);
     config.addLayerConfig(dim3, dim4, Activation::ReLU, true);
-    /* config.addLayerConfig(dim3, dim3, Activation::Sigmoid, true); */
     config.addLayerConfig(dim4, dim5, Activation::Softmax, false);
 
     return config;

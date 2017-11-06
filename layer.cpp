@@ -46,14 +46,14 @@ void Layer::feedforward(bool testing) {
 }
 
 void Layer::backpropagate() {
-    DZ = D.cwiseProduct(dactivation(Y));
-    DW = X.transpose() * DZ;
-    DY = DZ * W.transpose();
+    m_gradient = D.cwiseProduct(dactivation(Y));
+    DW = X.transpose() * m_gradient;
+    DY = m_gradient * W.transpose();
 }
 
 void Layer::update(float momentum, float learning_rate) {
     Eigen::MatrixXf w_change = W_change * momentum + DW * learning_rate;
-    float b_change = B_change * momentum + DZ.mean() * learning_rate;
+    float b_change = B_change * momentum + m_gradient.mean() * learning_rate;
 
     W -= w_change;
     W_change = w_change;
