@@ -23,12 +23,52 @@ Network::Network(
             layers[i] = new DropgradLayer(layer_config);
         } else if (layer_config.is_dropconnect) {
             std::cout << "dropconnect layer... " << config.scenario.size() << std::endl;
-            layers[i] = new DropconnectLayer(layer_config, config.scenario);
+            // layers[i] = new DropconnectLayer(layer_config, config.scenario);
         } else {
             std::cout << "layer..." << std::endl;
 			layers[i] = new Layer(layer_config);
         }
 	}
+}
+
+// train without validation
+TrainingResult Network::trainNetwork(
+	Eigen::MatrixXf& input,
+	Eigen::MatrixXf& target) {
+
+	std::vector<Eigen::MatrixXf> input_buffer;
+	std::vector<Eigen::MatrixXf> target_buffer;
+
+	TrainingResult scenario_result;
+
+	for (int epoch = 1; epoch <= m_config.epoch_count; epoch++) {
+		for (int i = 0; i < m_layer_count; i++) {
+			Layer *l = layers[i];
+			l->preEpoch(epoch -1);
+		}
+
+		shuffleMatrixPair(input, target);
+		splitMatrixPair(input, target, input_buffer, target_buffer, m_config.batch_size);
+		float error = 0.0f;
+		for (int b = 0; b < input_buffer.size(); b++) {
+			error += iterate(input_buffer[b], target_buffer[b]);
+		}
+		error /= input_buffer.size();
+		scenario_result.errors.push_back(error);
+        if (epoch % m_config.report_each == 0) {
+            std::cout << epoch << ": " << error << std::endl;
+            // layers[0]->report();
+            // for (int i = 0; i < m_layer_count; i++) {
+            //     Layer *l = layers[i];
+            //     l->report();
+            // }
+        }
+	}
+	for (int i = 0; i < m_layer_count; i++) {
+		Layer *l = layers[i];
+		scenario_result.weights.push_back(l->W);
+	}
+	return scenario_result;
 }
 
 TrainingResult Network::trainNetwork(
@@ -125,7 +165,6 @@ float Network::iterate(Eigen::MatrixXf& input, Eigen::MatrixXf& target) {
 	update();
 	Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
 	Eigen::MatrixXf log = clipped.array().log();
-    // Eigen::MatrixXf log = layers[m_layer_count-1]->Y.array().log();
 	return -(target.cwiseProduct(log).sum()) / input.rows();
 }
 
@@ -133,7 +172,6 @@ float Network::validate(Eigen::MatrixXf& input, Eigen::MatrixXf& target) {
 	feedforward(input, true);
 	Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
 	Eigen::MatrixXf log = clipped.array().log();
-    // Eigen::MatrixXf log = layers[m_layer_count-1]->Y.array().log();
 	return -(target.cwiseProduct(log).sum()) / input.rows();
 }
 

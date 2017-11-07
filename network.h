@@ -8,7 +8,7 @@
 
 #include "layer.h"
 #include "layer_drop.h"
-#include "layer_dropconnect.h"
+/* #include "layer_dropconnect.h" */
 #include "layer_grad.h"
 #include "scenario.h"
 
@@ -74,6 +74,9 @@ public:
         Eigen::MatrixXf& v_expected,
         bool skip_validate=true);
 
+    TrainingResult trainNetwork(
+        Eigen::MatrixXf& input,
+        Eigen::MatrixXf& expected);
 
     int test(
         Eigen::MatrixXf& input,

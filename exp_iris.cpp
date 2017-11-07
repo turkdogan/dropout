@@ -9,7 +9,7 @@
 void IrisExperiment::run() {
 	NetworkConfig config;
 	config.epoch_count = 10000;
-	config.learning_rate = 0.01f;
+	config.learning_rate = 0.1f;
 	config.momentum = 0.9f;
 	config.batch_size = 30;
 	config.report_each = 1000;
@@ -18,9 +18,9 @@ void IrisExperiment::run() {
     config.scenario = scenario;
 
     // Dropout network layer
-    config.addLayerConfig(4, 150, Activation::Sigmoid, false, false, true);
+    config.addLayerConfig(4, 150, Activation::Sigmoid, false, false, false);
     // Standard network layer
-    config.addLayerConfig(150, 40, Activation::Sigmoid, false, false, true);
+    config.addLayerConfig(150, 40, Activation::Sigmoid, true, false, false);
     // Standard network layer
     config.addLayerConfig(40, 3, Activation::Softmax, false, false);
 
