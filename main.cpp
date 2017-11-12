@@ -7,6 +7,10 @@
 
 #include "exp_mnist.h"
 #include "exp_mnist_epochs.h"
+#include "exp_mnist_activations.h"
+#include "exp_mnist_params.h"
+#include "exp_mnist_rates.h"
+#include "exp_mnist_dynamic.h"
 #include "exp_cifar.h"
 #include "exp_iris.h"
 
@@ -14,7 +18,11 @@ int main() {
     srand(time(NULL));
     auto first = std::chrono::system_clock::now();
 
-    MnistEpochExperiment experiment;
+    MnistDynamicExperiment experiment;
+    // MnistRateExperiment experiment;
+    // MnistEpochExperiment experiment;
+    // MnistActivationExperiment experiment;
+    // MnistParamExperiment experiment;
     // MnistExperiment experiment;
     experiment.run();
 

@@ -4,24 +4,17 @@
 #include <vector>
 #include <map>
 
-#include "exp.h"
+#include "exp_mnist.h"
 #include "network.h"
 
 #include "Eigen/Dense"
 
-class MnistEpochExperiment : public Experiment {
+class MnistEpochExperiment : public MnistExperiment {
 
 public:
     void run() override;
 
 private:
-    int reverseInt(int i);
-
-    Eigen::MatrixXf readMnistInput(const std::string& path,
-                                   int number_of_items = 60000);
-
-    Eigen::MatrixXf readMnistOutput(const std::string& path,
-                                    int number_of_items = 60000);
 
     NetworkConfig getConfig();
 };

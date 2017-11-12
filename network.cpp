@@ -163,16 +163,28 @@ float Network::iterate(Eigen::MatrixXf& input, Eigen::MatrixXf& target) {
 	Eigen::MatrixXf error = layers[m_layer_count-1]->Y - target;
 	backpropagate(error);
 	update();
-	Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
-	Eigen::MatrixXf log = clipped.array().log();
-	return -(target.cwiseProduct(log).sum()) / input.rows();
+    if (m_config.clip_before_error) {
+        Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
+        Eigen::MatrixXf log = clipped.array().log();
+        return -(target.cwiseProduct(log).sum()) / input.rows();
+    } else {
+        Eigen::MatrixXf non_clipped = layers[m_layer_count-1]->Y;
+        Eigen::MatrixXf log = non_clipped.array().log();
+        return -(target.cwiseProduct(log).sum()) / input.rows();
+    }
 }
 
 float Network::validate(Eigen::MatrixXf& input, Eigen::MatrixXf& target) {
 	feedforward(input, true);
-	Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
-	Eigen::MatrixXf log = clipped.array().log();
-	return -(target.cwiseProduct(log).sum()) / input.rows();
+    if (m_config.clip_before_error) {
+        Eigen::MatrixXf clipped = clipZero(layers[m_layer_count-1]->Y);
+        Eigen::MatrixXf log = clipped.array().log();
+        return -(target.cwiseProduct(log).sum()) / input.rows();
+    } else {
+        Eigen::MatrixXf non_clipped = layers[m_layer_count-1]->Y;
+        Eigen::MatrixXf log = non_clipped.array().log();
+        return -(target.cwiseProduct(log).sum()) / input.rows();
+    }
 }
 
 int Network::test(Eigen::MatrixXf& input, Eigen::MatrixXf& output) {

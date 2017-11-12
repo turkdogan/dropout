@@ -23,6 +23,8 @@ struct NetworkConfig {
     unsigned int batch_size = 1;
     unsigned int report_each = 1;
 
+    bool clip_before_error = true;
+
     void addLayerConfig(const int dim1,
                         const int dim2,
                         Activation activation,

@@ -12,10 +12,8 @@
 class MnistExperiment : public Experiment {
 
 public:
-    void run() override;
 
-private:
-    int reverseInt(int i);
+protected:
 
     Eigen::MatrixXf readMnistInput(const std::string& path,
                                    int number_of_items = 60000);
@@ -23,18 +21,10 @@ private:
     Eigen::MatrixXf readMnistOutput(const std::string& path,
                                     int number_of_items = 60000);
 
-    void runMnistNetwork(int trial,
-                         int dataset_size,
-                         Eigen::MatrixXf& train_input,
-                         Eigen::MatrixXf& train_output,
-                         Eigen::MatrixXf& validation_input,
-                         Eigen::MatrixXf& validation_output,
-                         Eigen::MatrixXf& test_input,
-                         Eigen::MatrixXf& test_output);
 
-    NetworkConfig getConfig();
+private:
+    int reverseInt(int i);
 
-    std::map<std::string, std::vector<Scenario>> getScenarios(int epoch_count);
 };
 
 #endif
