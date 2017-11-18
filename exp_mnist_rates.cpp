@@ -51,7 +51,7 @@ void MnistRateExperiment::run() {
             scenario.name();
         training_result.name = scenario_name;
         // TODO update category here...
-        training_result.category = "Mnist_epochs";
+        training_result.category = "Mnist_rate";
 
         std::cout << "write training result... " << std::endl;
         writeTrainingResult(training_result, scenario_name + ".txt", false);

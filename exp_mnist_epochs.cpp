@@ -21,7 +21,7 @@ void MnistEpochExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int epochs[] = {10, 20, 30};
+    int epochs[] = {10, 20, 30, 100, 200, 400, 800};
 
     NetworkConfig config = getConfig();
 

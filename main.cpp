@@ -18,13 +18,20 @@ int main() {
     srand(time(NULL));
     auto first = std::chrono::system_clock::now();
 
-    MnistDynamicExperiment experiment;
-    // MnistRateExperiment experiment;
-    // MnistEpochExperiment experiment;
-    // MnistActivationExperiment experiment;
-    // MnistParamExperiment experiment;
-    // MnistExperiment experiment;
-    experiment.run();
+    // MnistDynamicExperiment exp1;
+    // exp1.run();
+
+    // MnistRateExperiment exp2;
+    // exp2.run();
+
+    // MnistEpochExperiment exp3;
+    // exp3.run();
+
+    // MnistActivationExperiment exp4;
+    // exp4.run();
+
+    // MnistParamExperiment exp5;
+    // exp5.run();
 
     // IrisExperiment iris_experiment;
     // iris_experiment.run();

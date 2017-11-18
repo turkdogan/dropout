@@ -6,4 +6,5 @@ vs
 python/input
 python/output
 prog
-.DS_Store
+*.DS_Store
+*.zip

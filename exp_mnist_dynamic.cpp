@@ -22,7 +22,7 @@ void MnistDynamicExperiment::run() {
 
     Scenario s1("NO-DROPOUT");
 
-    int epoch_count = 4;
+    int epoch_count = 120;
 
     auto convex_fn  = [](int epoch) {return epoch * epoch;};
     auto concave_fn = [](int epoch) {return sqrt(epoch);};
@@ -80,7 +80,7 @@ void MnistDynamicExperiment::run() {
             scenario.name();
         training_result.name = scenario_name;
         // TODO update category here...
-        training_result.category = "Mnist_epochs";
+        training_result.category = "Mnist_dynamic";
 
         std::cout << "write training result... " << std::endl;
         writeTrainingResult(training_result, scenario_name + ".txt", false);
@@ -90,13 +90,13 @@ void MnistDynamicExperiment::run() {
 
 NetworkConfig MnistDynamicExperiment::getConfig() {
     const int dim1 = 784;
-    const int dim2 = 400;
+    const int dim2 = 200;
     const int dim3 = 100;
     const int dim4 = 10;
 
     NetworkConfig config;
     // will be updated before training
-    config.epoch_count = 4;
+    config.epoch_count = 120;
     config.report_each = 2;
     config.batch_size = 40;
     config.momentum = 0.9f;

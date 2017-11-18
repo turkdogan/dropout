@@ -3,11 +3,9 @@
 void writeTrainingResult(TrainingResult& t_result, std::string file_name, bool plot_overfit) {
     std::string out_folder = "output/";
     std::ofstream out_file;
-    std::cout << "0... " << out_folder + "E_" + file_name << std::endl;
     out_file.open(out_folder + "E_" + file_name);
 
-    std::cout << "1..." << std::endl;
-
+    out_file << t_result.correct << std::endl;
     for (double error : t_result.errors) {
         out_file << error << std::endl;
     }

@@ -2,7 +2,6 @@
 #define MNIST_DROPOUT_ACTIVATIONS_EXPERIMENT_H
 
 #include <vector>
-#include <map>
 
 #include "exp_mnist.h"
 #include "network.h"
@@ -16,7 +15,7 @@ public:
 
 private:
 
-    NetworkConfig getConfig(Activation activation);
+    std::vector<NetworkConfig> getConfigs();
 };
 
 #endif

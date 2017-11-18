@@ -21,19 +21,10 @@ void MnistActivationExperiment::run() {
     Eigen::MatrixXf test_input = readMnistInput("mnist/t10k-images.idx3-ubyte", 10000);
     Eigen::MatrixXf test_output = readMnistOutput("mnist/t10k-labels.idx1-ubyte", 10000);
 
-    int epochs[] = {10, 20, 30};
+    std::vector<NetworkConfig> configs = getConfigs();
 
-    Activation activations[] = {
-        Activation::Sigmoid,
-        Activation::Tanh,
-        Activation::ReLU
-    };
+    for (NetworkConfig config : configs) {
 
-    for (Activation &activation : activations) {
-
-        NetworkConfig config = getConfig(activation);
-        Scenario scenario("C0.5_" + std::to_string(config.epoch_count), config.epoch_count, 0.5f);
-        config.scenario = scenario;
 
         srand(99);
 
@@ -50,7 +41,7 @@ void MnistActivationExperiment::run() {
         training_result.correct = correct;
         std::string scenario_name =
             std::to_string(total_size) + "_" +
-            scenario.name();
+            config.scenario.name();
         training_result.name = scenario_name;
         // TODO update category here...
         training_result.category = "Mnist_activations";
@@ -61,25 +52,55 @@ void MnistActivationExperiment::run() {
 
 }
 
-NetworkConfig MnistActivationExperiment::getConfig(Activation activation) {
+std::vector<NetworkConfig> MnistActivationExperiment::getConfigs() {
+
 
     const int dim1 = 784;
-    const int dim2 = 400;
-    const int dim3 = 100;
-    const int dim4 = 10;
+    const int dim2 = 200;
+    const int dim3 = 10;
 
-    NetworkConfig config;
-    // will be updated before training
-    config.epoch_count = 120;
-    config.report_each = 2;
-    config.batch_size = 40;
-    config.momentum = 0.9f;
-    config.learning_rate = 0.01f;
-    config.clip_before_error = (activation == Activation::ReLU);
+    NetworkConfig config1;
+    config1.epoch_count = 120;
+    config1.report_each = 2;
+    config1.batch_size = 40;
+    config1.momentum = 0.9f;
+    config1.learning_rate = 0.001f;
+    config1.clip_before_error = false;
+    config1.scenario = Scenario("Mnist_act_sigmoid", config1.epoch_count, 0.5f);
 
-    config.addLayerConfig(dim1, dim2, activation, true, false, false);
-    config.addLayerConfig(dim2, dim3, activation, true, false, false);
-    config.addLayerConfig(dim3, dim4, Activation::Softmax, false, false, false);
+    config1.addLayerConfig(dim1, dim2, Activation::Sigmoid, true, false, false);
+    config1.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
 
-    return config;
+    NetworkConfig config2;
+    config2.epoch_count = 120;
+    config2.report_each = 2;
+    config2.batch_size = 40;
+    config2.momentum = 0.9f;
+    config2.learning_rate = 0.001f;
+    config2.clip_before_error = false;
+    config2.scenario = Scenario("Mnist_act_Tanh", config2.epoch_count, 0.5f);
+
+    config2.addLayerConfig(dim1, dim2, Activation::Tanh, true, false, false);
+    config2.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
+
+
+    NetworkConfig config3;
+    config3.epoch_count = 120;
+    config3.report_each = 2;
+    config3.batch_size = 40;
+    config3.momentum = 0.9f;
+    config3.learning_rate = 0.001f;
+    config3.clip_before_error = true;
+
+    config3.addLayerConfig(dim1, dim2, Activation::ReLU, true, false, false);
+    config3.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
+    config3.scenario = Scenario("Mnist_act_relu", config3.epoch_count, 0.5f);
+
+
+    std::vector<NetworkConfig> configs;
+    configs.push_back(config1);
+    configs.push_back(config2);
+    configs.push_back(config3);
+
+    return configs;
 }

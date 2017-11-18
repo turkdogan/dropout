@@ -40,6 +40,7 @@ void MnistParamExperiment::run() {
         training_result.correct = correct;
         std::string scenario_name =
             std::to_string(total_size) + "_" +
+            std::to_string(param) + "_" +
             config.scenario.name();
         training_result.name = scenario_name;
         // TODO update category here...
