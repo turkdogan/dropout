@@ -29,7 +29,7 @@ void CifarExperiment::run() {
 	Eigen::MatrixXf test_label(total_size, 10);
 	readCifarInput("cifar-10-batches-bin/data_batch_1.bin", test_input, test_label, total_size);
 
-    int dataset_sizes[] = {5000};
+    int dataset_sizes[] = {10000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runCifar(trial, dataset_size,
@@ -199,13 +199,13 @@ NetworkConfig CifarExperiment::getConfig() {
 	const int dim4 = 10;
 
 	NetworkConfig config;
-	config.epoch_count = 320;
-	config.report_each = 4;
+	config.epoch_count = 400;
+	config.report_each = 2;
 	config.batch_size = 100;
 	config.momentum = 0.9f;
 	config.learning_rate = 0.001f;
 
-	config.addLayerConfig(dim1, dim2, Activation::ReLU, true);
+	config.addLayerConfig(dim1, dim2, Activation::Sigmoid, true);
 	config.addLayerConfig(dim2, dim3, Activation::Sigmoid, true);
 	config.addLayerConfig(dim3, dim4, Activation::Softmax, false);
 

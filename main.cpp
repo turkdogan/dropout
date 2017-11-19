@@ -12,6 +12,7 @@
 #include "exp_mnist_rates.h"
 #include "exp_mnist_dynamic.h"
 #include "exp_cifar.h"
+#include "exp_cifar_rates.h"
 #include "exp_iris.h"
 
 int main() {
@@ -35,6 +36,10 @@ int main() {
 
     // IrisExperiment iris_experiment;
     // iris_experiment.run();
+
+
+    CifarRateExperiment cifar_experiment;
+    cifar_experiment.run();
 
     auto last = std::chrono::system_clock::now();
     auto dur = last - first;
