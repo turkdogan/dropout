@@ -12,6 +12,7 @@
 #include "exp_mnist_rates.h"
 #include "exp_mnist_dynamic.h"
 #include "exp_mnist_dropout.h"
+#include "exp_mnist_overfit.h"
 #include "exp_cifar.h"
 #include "exp_cifar_rates.h"
 #include "exp_iris.h"
@@ -35,14 +36,18 @@ int main() {
     // MnistParamExperiment exp5;
     // exp5.run();
 
-    MnistDropoutExperiment exp6;
-    exp6.run();
+    // MnistDropoutExperiment exp6;
+    // exp6.run();
 
     // IrisExperiment iris_experiment;
     // iris_experiment.run();
 
-    CifarRateExperiment cifar_experiment;
-    cifar_experiment.run();
+    // CifarRateExperiment cifar_experiment;
+    // cifar_experiment.run();
+
+
+    MnistOverfitExperiment exp7;
+    exp7.run();
 
     auto last = std::chrono::system_clock::now();
     auto dur = last - first;

@@ -61,7 +61,7 @@ std::vector<NetworkConfig> MnistDropoutExperiment::getConfigs() {
     config1.batch_size = 40;
     config1.momentum = 0.9f;
     config1.learning_rate = 0.01f;
-    config1.clip_before_error = false;
+    config1.clip_before_error = true;
     config1.scenario = Scenario("Mnist_no_drop");
 
     config1.addLayerConfig(dim1, dim2, Activation::Sigmoid, false, false, false);
@@ -73,7 +73,7 @@ std::vector<NetworkConfig> MnistDropoutExperiment::getConfigs() {
     config2.batch_size = 40;
     config2.momentum = 0.9f;
     config2.learning_rate = 0.01f;
-    config2.clip_before_error = false;
+    config2.clip_before_error = true;
     config2.scenario = Scenario("Mnist_drop05", config2.epoch_count, 0.5f);
 
     config2.addLayerConfig(dim1, dim2, Activation::Sigmoid, true, false, false);
@@ -85,7 +85,7 @@ std::vector<NetworkConfig> MnistDropoutExperiment::getConfigs() {
     config3.batch_size = 40;
     config3.momentum = 0.9f;
     config3.learning_rate = 0.01f;
-    config3.clip_before_error = false;
+    config3.clip_before_error = true;
 
     config3.addLayerConfig(dim1, dim2, Activation::Sigmoid, true, false, false);
     config3.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
