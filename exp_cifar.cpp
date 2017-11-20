@@ -199,7 +199,7 @@ NetworkConfig CifarExperiment::getConfig() {
 	const int dim4 = 10;
 
 	NetworkConfig config;
-	config.epoch_count = 400;
+	config.epoch_count = 1200;
 	config.report_each = 2;
 	config.batch_size = 100;
 	config.momentum = 0.9f;

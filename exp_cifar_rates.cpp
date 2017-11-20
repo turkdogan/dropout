@@ -33,7 +33,7 @@ void CifarRateExperiment::run() {
 	Eigen::MatrixXf test_label(test_size, 10);
 	readCifarInput(file_names, test_input, test_label);
 
-    int dataset_sizes[] = {10000};
+    int dataset_sizes[] = {50000};
     for (int trial = 0; trial < 1; trial++) {
         for (auto &dataset_size : dataset_sizes) {
             runCifar(trial, dataset_size,
@@ -162,9 +162,8 @@ std::map<std::string, std::vector<Scenario>> CifarRateExperiment::getScenarios(i
 NetworkConfig CifarRateExperiment::getConfig() {
 
 	const int dim1 = DIM_CIFAR;
-	const int dim2 = 200;
-	const int dim3 = 100;
-	const int dim4 = 10;
+	const int dim2 = 300;
+	const int dim3 = 10;
 
 	NetworkConfig config;
 	config.epoch_count = 600;
@@ -174,8 +173,7 @@ NetworkConfig CifarRateExperiment::getConfig() {
 	config.learning_rate = 0.001f;
 
 	config.addLayerConfig(dim1, dim2, Activation::Sigmoid, true);
-	config.addLayerConfig(dim2, dim3, Activation::Sigmoid, true);
-	config.addLayerConfig(dim3, dim4, Activation::Softmax, false);
+	config.addLayerConfig(dim2, dim3, Activation::Softmax, false);
 
     return config;
 }
