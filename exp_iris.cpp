@@ -11,16 +11,16 @@ void IrisExperiment::run() {
 	config.epoch_count = 10000;
 	config.learning_rate = 0.1f;
 	config.momentum = 0.9f;
-	config.batch_size = 30;
-	config.report_each = 1000;
+	config.batch_size = 20;
+	config.report_each = 100;
 
-    Scenario scenario("C0.5", 10000, 0.5f);
+    Scenario scenario("C0.5", config.epoch_count, 0.5f);
     config.scenario = scenario;
 
     // Dropout network layer
-    config.addLayerConfig(4, 150, Activation::Sigmoid, false, false, false);
+    config.addLayerConfig(4, 150, Activation::Sigmoid, false, true, false);
     // Standard network layer
-    config.addLayerConfig(150, 40, Activation::Sigmoid, true, false, false);
+    config.addLayerConfig(150, 40, Activation::Sigmoid, false, true, false);
     // Standard network layer
     config.addLayerConfig(40, 3, Activation::Softmax, false, false);
 
@@ -34,6 +34,7 @@ void IrisExperiment::run() {
 	TrainingResult scenario_result = network.trainNetwork(
 		dataset.input, dataset.output,
 		dataset.input, dataset.output);
+    std::cout << "iris runned" << std::endl;
 	int correct = network.test(dataset.input, dataset.output);
 	std::cout << "Correct: " << correct << std::endl;
 }

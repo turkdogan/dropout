@@ -19,20 +19,16 @@ public:
 private:
 
     // mask to calculate drop rate for current iteration
-    Eigen::MatrixXf dropout_mask;
+    Eigen::MatrixXf m_dropout_mask;
 
-    // average of the previous masks to calcualte current drop rate mask
-    Eigen::MatrixXf dropout_avg_mask;
+    Eigen::MatrixXf m_avg_dropout_mask;
 
-    // average of the applied dropout rates for each neuron
-    Eigen::VectorXf dropout_avg;
-
-    Eigen::MatrixXf dropout_prev;
-
-    bool m_drop;
+    Eigen::MatrixXf m_avg_gradient;
 
     // to calculate the dropout_mean_mask
     int m_current_iteration;
+
+    // int m_total_iteration = 0;
 
     int m_epoch_count;
 

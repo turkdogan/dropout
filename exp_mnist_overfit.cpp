@@ -24,7 +24,7 @@ void MnistOverfitExperiment::run() {
     Eigen::MatrixXf validation_input = input.block(validation_start_index, 0, 1000, input.cols());
     Eigen::MatrixXf validation_output = output.block(validation_start_index, 0, 1000, output.cols());
 
-    int dataset_sizes[] = {1000, 2000, 10000, 60000};
+    int dataset_sizes[] = {200, 1000, 2000, 10000, 20000};
     for (int dataset_size : dataset_sizes) {
 
         Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
