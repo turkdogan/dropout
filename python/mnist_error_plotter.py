@@ -7,15 +7,15 @@ colors = ["r", "c", "y", "b", "g", "m", "k", "violet", "lime", "dimgray", "yello
 params = [#"No Dropout",
           "No Dropout",
           "Constant Dropout with 0.5",
-          "Constant Dropout with 0.7",
+          "DropGrad",
 ]
 # params = [10, 100, 300, 800]
 
 def plot_err_mnist_charts():
     files = [
-        "E_60000_Mnist_no_drop.txt",
-        "E_60000_Mnist_drop05.txt",
-        "E_60000_Mnist_drop07.txt"
+        "E_50000_Mnist_no_grad.txt",
+        "E_50000_Mnist_grad_dropout05.txt",
+        "E_50000_Mnist_grad.txt"
     ]
 
     index = 0
@@ -45,7 +45,7 @@ def plot_err_mnist_charts():
 
     plt.ylabel("Cross-entropy error")
     plt.xlabel("MNIST Epochs")
-    plt.savefig("mnist.png")
+    plt.savefig("mnist_drop_grad.png")
     plt.close()
 
     return correct_values

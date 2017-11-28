@@ -45,10 +45,8 @@ void DropgradLayer::backpropagate() {
             float keep_rate = 1.0;
             if (diff_abs < diff_hyper_param) {
                 keep_rate = 0.5;
-            } else if (diff_abs > diff_hyper_param) {
-                keep_rate = 0.4;
-			} else if (diff_abs < -diff_hyper_param) {
-                keep_rate = 0.6;
+            } else {
+                keep_rate = 0.2;
             }
             double rnd = ((double) rand() / (RAND_MAX));
             if (rnd <= keep_rate) {

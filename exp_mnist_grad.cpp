@@ -24,41 +24,45 @@ void MnistGradExperiment::run() {
     Eigen::MatrixXf validation_input = input.block(validation_start_index, 0, 1000, input.cols());
     Eigen::MatrixXf validation_output = output.block(validation_start_index, 0, 1000, output.cols());
 
-    int dataset_sizes[] = {200, 1000, 2000, 10000, 20000};
+    int dataset_sizes[] = {20000, 50000};
     for (int dataset_size : dataset_sizes) {
 
         Eigen::MatrixXf train_input = input.block(0, 0, dataset_size, input.cols());
         Eigen::MatrixXf train_output = output.block(0, 0, dataset_size, output.cols());
 
-        NetworkConfig config = getConfig();
+        std::vector<NetworkConfig> configs = getConfigs();
 
-        srand(99);
+        for (NetworkConfig config : configs) {
 
-        Network network(config);
+            srand(99);
 
-        TrainingResult training_result = network.trainNetwork(
-            train_input, train_output,
-            validation_input, validation_output,
-            false);
+            Network network(config);
 
-        int correct = network.test(test_input, test_output);
-        training_result.count = 10000;
-        training_result.correct = correct;
-        training_result.trial = 1;
-        training_result.dataset_size = total_size;
-        training_result.correct = correct;
-        std::string scenario_name =
-            std::to_string(dataset_size) + "_" +
-            config.scenario.name();
-        training_result.name = scenario_name + "_grad" + std::to_string(dataset_size);
-        training_result.category = "Mnist_dropout_overfit";
+            TrainingResult training_result = network.trainNetwork(
+                train_input, train_output,
+                validation_input, validation_output,
+                false);
 
-        std::cout << "write training result... " << std::endl;
-        writeTrainingResult(training_result, scenario_name + ".txt", true);
+            int correct = network.test(test_input, test_output);
+            training_result.count = 10000;
+            training_result.correct = correct;
+            training_result.trial = 1;
+            training_result.dataset_size = total_size;
+            training_result.correct = correct;
+            std::string scenario_name =
+                std::to_string(dataset_size) + "_" +
+                config.scenario.name();
+            training_result.name = scenario_name + "_grad" + std::to_string(dataset_size);
+            training_result.category = "Mnist_dropout_overfit";
+
+            std::cout << "write training result... " << std::endl;
+            writeTrainingResult(training_result, scenario_name + ".txt", true);
+        }
+
     }
 }
 
-NetworkConfig MnistGradExperiment::getConfig() {
+std::vector<NetworkConfig> MnistGradExperiment::getConfigs() {
     const int dim1 = 784;
     const int dim2 = 200;
     const int dim3 = 10;
@@ -75,5 +79,34 @@ NetworkConfig MnistGradExperiment::getConfig() {
     config1.addLayerConfig(dim1, dim2, Activation::Sigmoid, false, true, false);
     config1.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
 
-    return config1;
+    NetworkConfig config2;
+    config2.epoch_count = 120;
+    config2.report_each = 2;
+    config2.batch_size = 40;
+    config2.momentum = 0.9f;
+    config2.learning_rate = 0.01f;
+    config2.clip_before_error = true;
+    config2.scenario = Scenario("Mnist_no_grad");
+
+    config2.addLayerConfig(dim1, dim2, Activation::Sigmoid, false, false, false);
+    config2.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
+
+    NetworkConfig config3;
+    config3.epoch_count = 120;
+    config3.report_each = 2;
+    config3.batch_size = 40;
+    config3.momentum = 0.9f;
+    config3.learning_rate = 0.01f;
+    config3.clip_before_error = true;
+    config3.scenario = Scenario("Mnist_grad_dropout05", 120, 0.5);
+
+    config3.addLayerConfig(dim1, dim2, Activation::Sigmoid, true, false, false);
+    config3.addLayerConfig(dim2, dim3, Activation::Softmax, false, false, false);
+
+    std::vector<NetworkConfig> configs;
+    configs.push_back(config1);
+    configs.push_back(config2);
+    configs.push_back(config3);
+
+    return configs;
 }

@@ -15,7 +15,7 @@ public:
 
 private:
 
-    NetworkConfig getConfig();
+    std::vector<NetworkConfig> getConfigs();
 };
 
 #endif
